@@ -49,7 +49,9 @@ if (!isset($footer_artists)) {
         <div style="display: flex; flex-direction: column; gap: 0.8rem;">
             <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--secondary-text);">Connect</h4>
             <a href="mailto:contact@mhousemusic.com" style="font-size: 0.9rem;">Contact Us</a>
-            <a href="social.php" style="font-size: 0.9rem;">Social Media</a>
+            <a href="https://instagram.com/mhouse.music" target="_blank" style="font-size: 0.9rem;">Instagram</a>
+            <a href="https://youtube.com" target="_blank" style="font-size: 0.9rem;">YouTube</a>
+            <a href="https://www.beatport.com" target="_blank" style="font-size: 0.9rem;">Beatport</a>
             <a href="https://kratex.in" target="_blank" style="font-size: 0.9rem;">Kratex&trade;</a>
         </div>
 

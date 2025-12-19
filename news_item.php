@@ -44,7 +44,8 @@ $suggested = $stmt->fetchAll();
             </div>
 
             <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 2rem;">
-                <?php echo htmlspecialchars($news['title']); ?></h1>
+                <?php echo htmlspecialchars($news['title']); ?>
+            </h1>
 
             <div style="width: 100%; aspect-ratio: 4/5; overflow: hidden; margin-bottom: 3rem;">
                 <img src="<?php echo htmlspecialchars($news['image_url']); ?>"
@@ -52,8 +53,8 @@ $suggested = $stmt->fetchAll();
                     style="width: 100%; height: 100%; object-fit: cover;">
             </div>
 
-            <div style="font-size: 1.2rem; line-height: 1.8; color: #ddd;">
-                <?php echo nl2br(htmlspecialchars($news['content'])); ?>
+            <div class="news-article-content" style="font-size: 1.5rem; line-height: 1.8; color: #ddd;">
+                <?php echo nl2br($news['content']); ?>
             </div>
         </article>
 

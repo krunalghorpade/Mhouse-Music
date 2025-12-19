@@ -38,7 +38,7 @@ $news_items = $stmt->fetchAll();
                                     href="news_item.php?id=<?php echo $item['id']; ?>"><?php echo htmlspecialchars($item['title']); ?></a>
                             </div>
                             <p style="font-size: 0.9rem; color: var(--secondary-text); line-height: 1.6;">
-                                <?php echo htmlspecialchars(substr($item['content'], 0, 150)) . '...'; ?>
+                                <?php echo htmlspecialchars(substr(strip_tags($item['content']), 0, 150)) . '...'; ?>
                             </p>
                             <a href="news_item.php?id=<?php echo $item['id']; ?>"
                                 style="display: inline-block; margin-top: 1rem; font-weight: 700; font-size: 0.8rem; border-bottom: 1px solid var(--accent-color);">READ

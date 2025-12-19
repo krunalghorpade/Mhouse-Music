@@ -433,6 +433,13 @@ header {
     gap: 2rem;
 }
 
+/* News Article Styles */
+.news-article-content a {
+    text-decoration: underline;
+    text-decoration-color: var(--accent-color);
+    text-underline-offset: 3px;
+}
+
 @media (min-width: 900px) {
     .hero-split {
         grid-template-columns: 1fr 1fr;
