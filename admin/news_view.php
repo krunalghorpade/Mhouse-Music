@@ -16,7 +16,7 @@ if (isset($_POST['delete_news'])) {
     $stmt = $pdo->prepare("DELETE FROM news WHERE id = ?");
     $stmt->execute([$id]);
     $_SESSION['flash_msg'] = "News article deleted successfully.";
-    echo "<script>window.location.href='?view=news';</script>";
+    header("Location: ?view=news");
     exit;
 }
 
@@ -55,7 +55,7 @@ if (isset($_POST['save_news'])) {
         $_SESSION['flash_msg'] = "New article published successfully.";
     }
 
-    echo "<script>window.location.href='?view=news';</script>";
+    header("Location: ?view=news");
     exit;
 }
 

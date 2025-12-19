@@ -16,7 +16,7 @@ if (isset($_POST['delete_release'])) {
     $stmt = $pdo->prepare("DELETE FROM releases WHERE id = ?");
     $stmt->execute([$id]);
     $_SESSION['flash_msg'] = "Release deleted successfully.";
-    echo "<script>window.location.href='?view=releases';</script>";
+    header("Location: ?view=releases");
     exit;
 }
 
@@ -141,7 +141,7 @@ if (isset($_POST['save_release'])) {
         }
     }
 
-    echo "<script>window.location.href='?view=releases';</script>";
+    header("Location: ?view=releases");
     exit;
 }
 
