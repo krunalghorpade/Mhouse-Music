@@ -1,0 +1,571 @@
+/* assets/css/style.css */
+
+:root {
+    --bg-color: #050505;
+    --text-color: #ffffff;
+    --accent-color: #f95738;
+    --secondary-text: #999999;
+    --border-color: #333333;
+
+    --font-heading: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    --font-body: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+
+    --spacing-unit: 2rem;
+    --header-height: 80px;
+}
+
+/* Loader */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.loader-logo {
+    width: 80px;
+    height: auto;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+}
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 14px;
+}
+
+body {
+    background-color: #050505;
+    background-image:
+        linear-gradient(rgba(255, 69, 0, 0.03), rgba(0, 0, 0, 0.9)),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='8.0' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+    color: var(--text-color);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+/* Fix Hero Banner Overflow */
+.hero-split .hero-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-split img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent-color);
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.page-title {
+    font-size: clamp(3rem, 8vw, 6rem);
+    margin-top: 0;
+    margin-bottom: 4rem;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 1rem;
+    display: inline-block;
+}
+
+/* Layout */
+/* Layout */
+.container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+main.container {
+    margin-top: 17vh;
+    /* Physical offset */
+    padding-bottom: 6rem;
+    min-height: 80vh;
+    position: relative;
+    z-index: 1;
+}
+
+/* Navigation */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 2rem;
+    background: rgba(5, 5, 5, 0.9);
+    /* Slight transparency */
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.brand {
+    z-index: 1002;
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 40px;
+    /* Adjust based on preference */
+    width: auto;
+    display: block;
+}
+
+.desktop-nav {
+    display: flex;
+    gap: 2rem;
+}
+
+.desktop-nav a {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+/* Mobile Nav */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 1002;
+}
+
+.hamburger span {
+    width: 30px;
+    height: 2px;
+    background-color: var(--text-color);
+    transition: 0.3s;
+}
+
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    z-index: 1001;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.mobile-nav.active {
+    transform: translateX(0);
+}
+
+.mobile-nav a {
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+    .desktop-nav {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+}
+
+/* General Grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    /* Reduced gap */
+}
+
+/* Cards (Merch, Releases) */
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.card-image {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background-color: #1a1a1a;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+
+
+.aspect-4-5 {
+    aspect-ratio: 4/5 !important;
+}
+
+.aspect-16-9 {
+    aspect-ratio: 16/9 !important;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.card:hover .card-image img {
+    transform: scale(1.05);
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    /* Removed border-top */
+    padding-top: 0;
+}
+
+.card-title {
+    font-size: 1rem;
+    /* Smaller font */
+    font-weight: 700;
+    text-transform: uppercase;
+    max-width: 100%;
+    display: block;
+    line-height: 1.2;
+}
+
+.artist-name {
+    font-size: 1rem;
+    /* Match title */
+    font-weight: 400;
+    text-transform: uppercase;
+    color: var(--secondary-text);
+    display: block;
+    margin-top: 0.2rem;
+}
+
+.card-meta {
+    font-size: 0.9rem;
+    color: var(--secondary-text);
+    text-align: right;
+}
+
+.price {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-row>div {
+    flex: 1;
+}
+
+/* Updated Page Title */
+.page-title {
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    /* 50% smaller approx */
+    margin-top: 0;
+    margin-bottom: 3rem;
+    border-bottom: none;
+    /* Removed border */
+    padding-bottom: 0;
+    display: block;
+    text-align: center;
+    /* Center align for simple pages */
+}
+
+/* Artist List Grid (Redesign) */
+.artist-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 3rem;
+}
+
+.artist-list-item {
+    display: flex !important;
+    flex-direction: column;
+    border-bottom: none !important;
+    padding: 0 !important;
+    align-items: flex-start !important;
+    gap: 1rem;
+}
+
+.artist-list-item:hover {
+    padding-left: 0 !important;
+    /* Remove the shift effect from list style */
+    opacity: 0.8;
+}
+
+.artist-list-image {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    background-color: #222;
+}
+
+.artist-list-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Artist Profile (Landing) */
+.artist-profile {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+@media (min-width: 900px) {
+    .artist-profile {
+        grid-template-columns: 1fr 1fr;
+        align-items: flex-start;
+        min-height: 80vh;
+    }
+
+    .artist-profile-image {
+        position: sticky;
+        top: 100px;
+    }
+}
+
+.artist-profile-image img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+.artist-bio-section {
+    padding: 2rem 0;
+}
+
+/* Kratex Split Layout */
+.hero-split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 900px) {
+    .hero-split {
+        grid-template-columns: 1fr 1fr;
+        min-height: 80vh;
+        align-items: center;
+    }
+}
+
+.hero-text h1 {
+    font-size: clamp(4rem, 10vw, 8rem);
+    line-height: 0.9;
+    letter-spacing: -3px;
+    margin-bottom: 2rem;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
+    padding-left: 4rem;
+    border-left: 2px solid var(--accent-color);
+    max-width: 500px;
+}
+
+/* Footer */
+footer {
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+}
+
+.footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-nav a {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.copyright {
+    color: var(--secondary-text);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Utility */
+.btn {
+    display: inline-block;
+    background: #ffffff;
+    color: #000000;
+    padding: 1rem 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 2rem;
+    border-radius: 50px;
+    /* Rounded Buttons */
+}
+
+/* Video Hero Section */
+.video-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-top: 0;
+    /* Ensures it starts at the top */
+}
+
+.video-hero video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -2;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+    z-index: -1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem;
+    max-width: 1200px;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 1vw, 5rem);
+    font-weight: 500;
+
+    text-transform: uppercase;
+    line-height: 1.1;
+    letter-spacing: 0px;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.hero-title .highlight {
+    color: var(--accent-color);
+}
+
+/* Transparent Header for Homepage */
+/* Transparent Header for Homepage */
+header.transparent {
+    background: transparent;
+    backdrop-filter: none;
+    border-bottom: none;
+    box-shadow: none;
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+header.transparent.scrolled {
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+}
