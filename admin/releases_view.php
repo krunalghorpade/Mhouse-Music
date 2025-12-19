@@ -22,67 +22,7 @@ if (isset($_POST['delete_release'])) {
     exit;
 }
 
-// Handle Save Cover Settings
-if (isset($_POST['save_cover'])) {
-    $main_text = $_POST['main_text'];
-    $sub_text = $_POST['sub_text'];
-    $highlight_text = $_POST['highlight_text'];
-    // Keeping these as they might be useful or legacy, treating tag_text/button as optional
-    $tag_text = $_POST['tag_text'] ?? '';
-    $button_label = $_POST['button_label'] ?? '';
-    $button_link = $_POST['button_link'] ?? '';
-
-    // Handle Image (Legacy/Poster)
-    $image_url = $_POST['current_cover_image'] ?? '';
-    if (isset($_FILES['cover_image']) && $_FILES['cover_image']['error'] == 0) {
-        $target_dir = "../assets/uploads/";
-        if (!file_exists($target_dir))
-            mkdir($target_dir, 0777, true);
-
-        // Sanitize filename
-        $raw_name = basename($_FILES["cover_image"]["name"]);
-        $clean_name = preg_replace('/[^a-zA-Z0-9._-]/', '_', $raw_name);
-        $filename = time() . "_cover_" . $clean_name;
-        $target_file = $target_dir . $filename;
-        if (move_uploaded_file($_FILES["cover_image"]["tmp_name"], $target_file)) {
-            $image_url = "assets/uploads/" . $filename;
-        } else {
-            $_SESSION['flash_error'] = "Failed to upload cover image.";
-        }
-    }
-
-    // Handle Video
-    $video_url = $_POST['current_video_url'] ?? '';
-    if (isset($_FILES['video_file']) && $_FILES['video_file']['error'] == 0) {
-        $target_dir = "../assets/uploads/";
-        if (!file_exists($target_dir))
-            mkdir($target_dir, 0777, true);
-
-        // Sanitize filename
-        $raw_name = basename($_FILES["video_file"]["name"]);
-        $clean_name = preg_replace('/[^a-zA-Z0-9._-]/', '_', $raw_name);
-        $filename = time() . "_video_" . $clean_name;
-        $target_file = $target_dir . $filename;
-        if (move_uploaded_file($_FILES["video_file"]["tmp_name"], $target_file)) {
-            $video_url = "assets/uploads/" . $filename;
-        } else {
-            $_SESSION['flash_error'] = "Failed to upload video file.";
-        }
-    }
-
-    // Insert or Update (ID is always 1)
-    $stmt = $pdo->prepare("INSERT OR REPLACE INTO cover_settings (id, tag_text, main_text, sub_text, highlight_text, button_label, button_link, image_url, video_url) VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$tag_text, $main_text, $sub_text, $highlight_text, $button_label, $button_link, $image_url, $video_url]);
-
-    if (!isset($_SESSION['flash_error'])) {
-        $_SESSION['flash_msg'] = "Video Hero settings updated successfully.";
-    }
-
-    if (ob_get_length())
-        ob_end_clean();
-    header("Location: ?view=releases");
-    exit;
-}
+// Handle Save Cover Settings - REMOVED
 
 // Handle Add/Edit
 if (isset($_POST['save_release'])) {
@@ -111,7 +51,12 @@ if (isset($_POST['save_release'])) {
             $_SESSION['flash_error'] = "Failed to upload cover art.";
         }
     } elseif (isset($_FILES['cover']) && $_FILES['cover']['error'] != 4) {
-        $_SESSION['flash_error'] = "Cover upload error: " . $_FILES['cover']['error'];
+        if ($_FILES['cover']['error'] == 1) {
+            $max = ini_get('upload_max_filesize');
+            $_SESSION['flash_error'] = "File too large. Your server limit is $max.";
+        } else {
+            $_SESSION['flash_error'] = "Cover upload error: " . $_FILES['cover']['error'];
+        }
     }
 
     $links = [];
@@ -123,8 +68,6 @@ if (isset($_POST['save_release'])) {
         $links['beatport'] = $_POST['beatport'];
     if (!empty($_POST['youtube']))
         $links['youtube'] = $_POST['youtube'];
-    if (!empty($_POST['soundcloud']))
-        $links['soundcloud'] = $_POST['soundcloud'];
     $platform_links = json_encode($links);
 
     $release_id = $_POST['id'];
@@ -210,44 +153,7 @@ if (!$cover) {
 }
 ?>
 
-<!-- Cover Change Section -->
-<!-- Cover Change Section (Video Hero) -->
-<div class="card" style="margin-bottom: 2rem;">
-    <h2 style="margin-bottom: 1rem;">Video Hero Settings</h2>
-    <form method="POST" action="?view=releases" enctype="multipart/form-data" onsubmit="showLoading()">
-        <input type="hidden" name="current_cover_image" value="<?php echo $cover['image_url'] ?? ''; ?>">
-        <input type="hidden" name="current_video_url" value="<?php echo $cover['video_url'] ?? ''; ?>">
-
-        <label>Hero Text (Main Title)</label>
-        <textarea name="main_text" rows="2"
-            placeholder="Main Headline"><?php echo htmlspecialchars($cover['main_text'] ?? ''); ?></textarea>
-
-        <label>Word(s) to Highlight (Will be orange)</label>
-        <input type="text" name="highlight_text" value="<?php echo htmlspecialchars($cover['highlight_text'] ?? ''); ?>"
-            placeholder="e.g. Marathi">
-
-        <label>Sub Text (Hashtag/Subtitle)</label>
-        <input type="text" name="sub_text" value="<?php echo htmlspecialchars($cover['sub_text'] ?? ''); ?>"
-            placeholder="e.g. #marathivaajlachpahije">
-
-        <label>Video File (Max 128MB)</label>
-        <input type="file" name="video_file" accept="video/*">
-        <?php if (!empty($cover['video_url'])): ?>
-            <div style="margin-top: 0.5rem; color: var(--ios-blue); font-size: 0.8rem;">
-                Current Video: <?php echo basename($cover['video_url']); ?>
-            </div>
-        <?php endif; ?>
-
-        <div style="margin-top: 1rem; border-top: 1px solid var(--ios-separator); padding-top: 1rem;">
-            <h3 style="font-size: 1rem; color: var(--ios-secondary); margin-bottom: 0.5rem;">Legacy / Fallback Options
-            </h3>
-            <label>Cover Image (Poster for Video)</label>
-            <input type="file" name="cover_image" accept="image/*">
-        </div>
-
-        <button type="submit" name="save_cover" class="ios-btn" style="margin-top: 1rem;">Update Video Hero</button>
-    </form>
-</div>
+<!-- Cover Change Section REMOVED -->
 
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
@@ -342,8 +248,6 @@ if (!$cover) {
             placeholder="Beatport URL">
         <input type="text" name="youtube" value="<?php echo htmlspecialchars($links['youtube'] ?? ''); ?>"
             placeholder="YouTube URL">
-        <input type="text" name="soundcloud" value="<?php echo htmlspecialchars($links['soundcloud'] ?? ''); ?>"
-            placeholder="SoundCloud URL">
 
         <div style="display: flex; gap: 1rem; margin-top: 2rem;">
             <button type="submit" name="save_release" class="ios-btn">Save Release</button>

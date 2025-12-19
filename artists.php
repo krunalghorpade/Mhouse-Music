@@ -15,6 +15,7 @@ $artists = $stmt->fetchAll();
         /* Specific override for this page if needed, but style.css handles .artist-list-item */
     </style>
     <link rel="icon" type="image/png" href="assets/images/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>

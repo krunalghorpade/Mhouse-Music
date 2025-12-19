@@ -23,12 +23,6 @@ $stmtArtists = $pdo->prepare("SELECT a.id, a.name FROM artists a JOIN release_ar
 $stmtArtists->execute([$id]);
 $artists = $stmtArtists->fetchAll();
 
-// Fallback if no artists linked (legacy data safety)
-if (empty($artists) && !empty($release['artist_name'])) {
-    // This part is tricky if artist_name column is gone or empty. 
-    // Ideally we rely on IDs. If empty, maybe show "M-House Artist"
-}
-
 $links = json_decode($release['platform_links'], true) ?? [];
 ?>
 <!DOCTYPE html>
@@ -40,30 +34,32 @@ $links = json_decode($release['platform_links'], true) ?? [];
     <title>M-HOUSE | <?php echo htmlspecialchars($release['title']); ?></title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="icon" type="image/png" href="assets/images/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
     <?php include 'header.php'; ?>
 
     <main class="container">
-        <div class="hero-split" style="margin-top: 4rem;">
-            <!-- Artwork -->
-            <div class="hero-image" style="background: transparent;">
-                <img src="<?php echo htmlspecialchars($release['cover_url']); ?>" alt="Cover Art"
-                    style="box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+
+        <div class="track-hero">
+            <!-- Left: Artwork -->
+            <div class="track-artwork">
+                <img src="<?php echo htmlspecialchars($release['cover_url']); ?>" alt="Cover Art">
             </div>
 
-            <!-- Details -->
-            <div class="hero-text">
-                <span class="uppercase" style="color: var(--accent-color); font-weight: 700; letter-spacing: 2px;">
+            <!-- Right: Info -->
+            <div class="track-info">
+                <span class="track-type">
                     <?php echo htmlspecialchars($release['type']); ?>
                 </span>
-                <h1 style="font-size: clamp(3rem, 6vw, 6rem); margin-top: 1rem; margin-bottom: 0.5rem;">
+
+                <h1 class="track-title">
                     <?php echo htmlspecialchars($release['title']); ?>
                 </h1>
 
                 <!-- Artists -->
-                <h2 style="font-size: 2rem; color: var(--secondary-text); margin-bottom: 2rem;">
+                <div class="track-artists">
                     <?php
                     $artistLinks = [];
                     foreach ($artists as $artist) {
@@ -71,52 +67,51 @@ $links = json_decode($release['platform_links'], true) ?? [];
                     }
                     echo implode(', ', $artistLinks);
                     ?>
-                </h2>
+                </div>
 
                 <!-- Description -->
                 <?php if (!empty($release['description'])): ?>
-                    <p style="padding-left: 0; border-left: none; margin-bottom: 2rem; font-size: 1.1rem; color: #ccc;">
+                    <p style="margin-bottom: 3rem; font-size: 1.1rem; color: #ccc; line-height: 1.6; max-width: 600px;">
                         <?php echo nl2br(htmlspecialchars($release['description'])); ?>
                     </p>
                 <?php endif; ?>
 
-                <!-- Links -->
-                <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                <!-- Links (Minimal Buttons) -->
+                <div class="track-links">
                     <?php if (!empty($links['spotify'])): ?>
-                        <a href="<?php echo htmlspecialchars($links['spotify']); ?>" class="btn"
-                            style="background: #1DB954; color: black; margin-top: 0; border: none;">Spotify</a>
+                        <a href="<?php echo htmlspecialchars($links['spotify']); ?>" class="btn-minimal" target="_blank">
+                            <i class="fa-brands fa-spotify"></i> Spotify
+                        </a>
                     <?php endif; ?>
 
                     <?php if (!empty($links['applemusic'])): ?>
-                        <a href="<?php echo htmlspecialchars($links['applemusic']); ?>" class="btn"
-                            style="background: #FC3C44; color: white; margin-top: 0; border: none;">Apple Music</a>
-                    <?php endif; ?>
-
-                    <?php if (!empty($links['beatport'])): ?>
-                        <a href="<?php echo htmlspecialchars($links['beatport']); ?>" class="btn"
-                            style="background: #02FF95; color: black; margin-top: 0; border: none;">Beatport</a>
-                    <?php endif; ?>
-
-                    <?php if (!empty($links['soundcloud'])): ?>
-                        <a href="<?php echo htmlspecialchars($links['soundcloud']); ?>" class="btn"
-                            style="background: #FF5500; color: white; margin-top: 0; border: none;">SoundCloud</a>
+                        <a href="<?php echo htmlspecialchars($links['applemusic']); ?>" class="btn-minimal" target="_blank">
+                            <i class="fa-brands fa-apple"></i> Apple Music
+                        </a>
                     <?php endif; ?>
 
                     <?php if (!empty($links['youtube'])): ?>
-                        <a href="<?php echo htmlspecialchars($links['youtube']); ?>" class="btn"
-                            style="background: #FF0000; color: white; margin-top: 0; border: none;">YouTube</a>
+                        <a href="<?php echo htmlspecialchars($links['youtube']); ?>" class="btn-minimal" target="_blank">
+                            <i class="fa-brands fa-youtube"></i> YouTube
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if (!empty($links['beatport'])): ?>
+                        <a href="<?php echo htmlspecialchars($links['beatport']); ?>" class="btn-minimal" target="_blank">
+                            <i class="fa-solid fa-music"></i> Beatport
+                        </a>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
 
-        <!-- Embedded Player (YouTube/Soundcloud) -->
+        <!-- Embedded Player (YouTube) -->
         <?php if (!empty($links['youtube'])):
-            // Simple logic to convert watch URL to embed
             $embedUrl = str_replace("watch?v=", "embed/", $links['youtube']);
             ?>
-            <section style="margin-top: 6rem;">
-                <div style="width: 100%; aspect-ratio: 16/9;">
+            <section style="margin-bottom: 6rem; max-width: 1000px; margin-left: auto; margin-right: auto;">
+                <div
+                    style="width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
                     <iframe width="100%" height="100%" src="<?php echo htmlspecialchars($embedUrl); ?>"
                         title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -47,7 +47,12 @@ if (isset($_POST['save_artist'])) {
         }
     } elseif (isset($_FILES['image']) && $_FILES['image']['error'] != 4) {
         // Error other than "no file uploaded" (4)
-        $_SESSION['flash_error'] = "Image upload error code: " . $_FILES['image']['error'];
+        if ($_FILES['image']['error'] == 1) {
+            $max = ini_get('upload_max_filesize');
+            $_SESSION['flash_error'] = "File too large. Your server limit is $max.";
+        } else {
+            $_SESSION['flash_error'] = "Image upload error code: " . $_FILES['image']['error'];
+        }
     }
 
     $socials = [];
@@ -55,8 +60,6 @@ if (isset($_POST['save_artist'])) {
         $socials['instagram'] = $_POST['instagram'];
     if (!empty($_POST['spotify']))
         $socials['spotify'] = $_POST['spotify'];
-    if (!empty($_POST['soundcloud']))
-        $socials['soundcloud'] = $_POST['soundcloud'];
     $social_links = json_encode($socials);
 
     if (!empty($_POST['id'])) {
@@ -151,8 +154,6 @@ $socials = $editArtist ? json_decode($editArtist['social_links'], true) : [];
             placeholder="Instagram URL">
         <input type="text" name="spotify" value="<?php echo htmlspecialchars($socials['spotify'] ?? ''); ?>"
             placeholder="Spotify URL">
-        <input type="text" name="soundcloud" value="<?php echo htmlspecialchars($socials['soundcloud'] ?? ''); ?>"
-            placeholder="SoundCloud URL">
 
         <div style="display: flex; gap: 1rem; margin-top: 2rem;">
             <button type="submit" name="save_artist" class="ios-btn">Save Artist</button>

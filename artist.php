@@ -30,6 +30,7 @@ $releases = $stmt->fetchAll();
     <title>M-HOUSE | <?php echo htmlspecialchars($artist['name']); ?></title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="icon" type="image/png" href="assets/images/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
@@ -46,20 +47,32 @@ $releases = $stmt->fetchAll();
             <!-- Right: Details -->
             <div class="artist-details">
                 <h1 style="font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 2rem; line-height: 1;">
-                    <?php echo htmlspecialchars($artist['name']); ?></h1>
+                    <?php echo htmlspecialchars($artist['name']); ?>
+                </h1>
 
                 <div class="artist-bio-section"
                     style="font-size: 1.1rem; color: var(--secondary-text); margin-bottom: 2rem; white-space: pre-wrap;">
-                    <?php echo htmlspecialchars($artist['bio']); ?></div>
+                    <?php echo htmlspecialchars($artist['bio']); ?>
+                </div>
 
                 <?php
                 $socials = json_decode($artist['social_links'], true) ?? [];
                 if (!empty($socials)):
                     ?>
-                    <div style="display: flex; gap: 1.5rem; margin-bottom: 3rem; flex-wrap: wrap;">
-                        <?php foreach ($socials as $platform => $url): ?>
-                            <a href="<?php echo htmlspecialchars($url); ?>" target="_blank" class="btn"
-                                style="margin:0; padding: 0.8rem 1.5rem; font-size: 0.9rem; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);"><?php echo $platform; ?></a>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap;">
+                        <?php foreach ($socials as $platform => $url):
+                            if ($platform == 'soundcloud')
+                                continue; // Skip SoundCloud
+                    
+                            $icon = 'fa-solid fa-link'; // Default
+                            if ($platform == 'instagram')
+                                $icon = 'fa-brands fa-instagram';
+                            if ($platform == 'spotify')
+                                $icon = 'fa-brands fa-spotify';
+                            ?>
+                            <a href="<?php echo htmlspecialchars($url); ?>" target="_blank" class="btn-minimal">
+                                <i class="<?php echo $icon; ?>"></i> <?php echo ucfirst($platform); ?>
+                            </a>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>

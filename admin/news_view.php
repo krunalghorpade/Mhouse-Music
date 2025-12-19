@@ -47,7 +47,12 @@ if (isset($_POST['save_news'])) {
             $_SESSION['flash_error'] = "Failed to upload image.";
         }
     } elseif (isset($_FILES['image']) && $_FILES['image']['error'] != 4) {
-        $_SESSION['flash_error'] = "Image upload error: " . $_FILES['image']['error'];
+        if ($_FILES['image']['error'] == 1) {
+            $max = ini_get('upload_max_filesize');
+            $_SESSION['flash_error'] = "File too large. Your server limit is $max.";
+        } else {
+            $_SESSION['flash_error'] = "Image upload error: " . $_FILES['image']['error'];
+        }
     }
 
     if (!empty($_POST['id'])) {

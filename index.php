@@ -64,6 +64,7 @@ $news = $stmt->fetchAll();
         }
     </style>
     <link rel="icon" type="image/png" href="assets/images/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
@@ -74,13 +75,14 @@ $news = $stmt->fetchAll();
     <section class="video-hero">
         <video autoplay muted loop playsinline id="heroVideo">
             <source src="<?php echo htmlspecialchars($hero_video); ?>" type="video/mp4">
-            <!-- Fallback for mov if needed, browsers mostly support mp4 now or quicktime -->
             <source src="<?php echo htmlspecialchars($hero_video); ?>" type="video/quicktime">
         </video>
         <div class="video-overlay"></div>
         <div class="hero-content">
-            <h1 class="hero-title"><?php echo $hero_main_text; // Output raw html for highlight span 
-            ?></h1>
+            <h1 class="hero-title" id="glitchText"
+                data-original="<?php echo htmlspecialchars(strip_tags($hero_main_text)); ?>">
+                <?php echo $hero_main_text; ?>
+            </h1>
             <?php if (!empty($hero_sub_text)): ?>
                 <p class="hero-subtitle" style="font-size: 1.2rem; margin-top: 1rem; color: #ccc; letter-spacing: 2px;">
                     <?php echo htmlspecialchars($hero_sub_text); ?>
@@ -88,6 +90,39 @@ $news = $stmt->fetchAll();
             <?php endif; ?>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const textElement = document.getElementById('glitchText');
+            // Store the HTML version to keep the span if possible, or just raw text. 
+            // The user wants specific text for the glitch.
+            const originalHTML = textElement.innerHTML;
+            const marathiText = "M-House Music हे एक रेकॉर्ड लेबल आहे जे मराठी संगीताला आधुनिक इलेक्ट्रॉनिक वाइब्समध्ये (Electronic Vibes) रूपांतरित करत आहे";
+
+            setInterval(() => {
+                // 1. Trigger Glitch / Change to Marathi
+                textElement.style.opacity = 0;
+                setTimeout(() => {
+                    textElement.innerText = marathiText;
+                    textElement.style.opacity = 1;
+
+                    // 2. Wait 2 seconds, then revert
+                    setTimeout(() => {
+                        textElement.style.opacity = 0;
+                        setTimeout(() => {
+                            textElement.innerHTML = originalHTML;
+                            textElement.style.opacity = 1;
+                        }, 100); // short fade
+                    }, 2000);
+
+                }, 100);
+            }, 7000);
+            // User: "every 7 seconds for 2 seconds". 
+            // Value: 7000ms interval. 
+            // But if I set interval to 7000, it will happen every 7s.
+
+        });
+    </script>
 
     <!-- Main Content (Reset top margin for homepage flow) -->
     <main class="container" style="margin-top: 0 !important;">
