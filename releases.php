@@ -1,6 +1,6 @@
 <?php
 require_once 'backend/db.php';
-$stmt = $pdo->query("SELECT r.*, GROUP_CONCAT(a.name, '||') as artist_names, GROUP_CONCAT(a.id, '||') as artist_ids 
+$stmt = $pdo->query("SELECT r.*, GROUP_CONCAT(a.name SEPARATOR '||') as artist_names, GROUP_CONCAT(a.id SEPARATOR '||') as artist_ids 
                      FROM releases r 
                      LEFT JOIN release_artists ra ON r.id = ra.release_id 
                      LEFT JOIN artists a ON ra.artist_id = a.id 

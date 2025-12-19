@@ -16,35 +16,15 @@ $hero_video = !empty($cover['video_url']) ? $cover['video_url'] : 'assets/videos
 $hero_main_text = 'M-House Music is a record label modernizing <span class="highlight">Marathi</span> music in electronic vibes';
 $hero_sub_text = '#marathivaajlachpahije';
 
-// 2. Latest Release (Single - most recent)
-$stmt = $pdo->query("SELECT * FROM releases ORDER BY release_date DESC LIMIT 1");
-$latest_release = $stmt->fetch();
-
-// 2. Releases (Next 4)
-$sql = "SELECT r.*, GROUP_CONCAT(a.name, ', ') as artist_names 
+// 2. Releases (Latest 4)
+$sql = "SELECT r.*, GROUP_CONCAT(a.name SEPARATOR ', ') as artist_names 
         FROM releases r 
         LEFT JOIN release_artists ra ON r.id = ra.release_id 
         LEFT JOIN artists a ON ra.artist_id = a.id 
-        WHERE r.id != ? 
         GROUP BY r.id 
         ORDER BY r.release_date DESC 
         LIMIT 4";
-$stmt = $pdo->prepare($sql);
-
-if ($latest_release) {
-    $stmt->execute([$latest_release['id']]);
-} else {
-    // Fallback if no latest release, just show all
-    $sql = "SELECT r.*, GROUP_CONCAT(a.name, ', ') as artist_names 
-            FROM releases r 
-            LEFT JOIN release_artists ra ON r.id = ra.release_id 
-            LEFT JOIN artists a ON ra.artist_id = a.id 
-            GROUP BY r.id 
-            ORDER BY r.release_date DESC 
-            LIMIT 4";
-    $stmt = $pdo->query($sql);
-}
-$releases = $stmt->fetchAll();
+$releases = $pdo->query($sql)->fetchAll();
 
 // 3. Merch (4)
 $stmt = $pdo->query("SELECT * FROM merch WHERE status = 'available' ORDER BY created_at DESC LIMIT 4");
