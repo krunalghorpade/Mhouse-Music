@@ -11,15 +11,10 @@ try {
 
 // Prepare Hero Data
 $hero_video = !empty($cover['video_url']) ? $cover['video_url'] : 'assets/videos/website.mov';
-$hero_main_text = !empty($cover['main_text']) ? $cover['main_text'] : 'M-House Music is a Record Label thats Modernizing Marathi Music';
-$hero_highlight = !empty($cover['highlight_text']) ? $cover['highlight_text'] : 'Marathi';
-$hero_sub_text = !empty($cover['sub_text']) ? $cover['sub_text'] : '#marathivaajlachpahije';
 
-// Highlight Logic
-if (!empty($hero_highlight)) {
-    // Case-insensitive highlighted word replacement
-    $hero_main_text = preg_replace('/(' . preg_quote($hero_highlight, '/') . ')/i', '<span class="highlight">$1</span>', $hero_main_text);
-}
+// Static Hero Text
+$hero_main_text = 'M-House Music is a record label modernizing <span class="highlight">Marathi</span> music in electronic vibes';
+$hero_sub_text = '#marathivaajlachpahije';
 
 // 2. Latest Release (Single - most recent)
 $stmt = $pdo->query("SELECT * FROM releases ORDER BY release_date DESC LIMIT 1");
