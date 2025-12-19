@@ -1,115 +1,116 @@
 <?php
 // backend/db.php
 
-$db_dir = __DIR__ . '/../data';
-$db_file = $db_dir . '/database.sqlite';
-
-// Ensure data directory exists
-if (!file_exists($db_dir)) {
-    mkdir($db_dir, 0777, true);
-}
+// Database Configuration
+$host = 'localhost';
+$dbname = 'kratexin_mhousemusic';
+$username = 'kratexin_kratexin';
+$password = 'mymhousealias123';
 
 try {
-    // Create (connect to) SQLite database in file
-    $pdo = new PDO("sqlite:" . $db_file);
+    // Connect to MySQL
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
+
     // Set errormode to exceptions
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Set default fetch mode to associative array
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
-    // Create tables if they do not exist
+    // Create tables if they do not exist (MySQL Compatible)
     $commands = [
         "CREATE TABLE IF NOT EXISTS artists (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
             bio TEXT,
-            image_url TEXT,
+            image_url VARCHAR(255),
             social_links TEXT, -- JSON string
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
         "CREATE TABLE IF NOT EXISTS releases (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            cover_url TEXT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            cover_url VARCHAR(255),
             release_date DATE,
             platform_links TEXT, -- JSON string
-            type TEXT, -- Single, Album, EP
-            description TEXT, -- Added for track description
+            type VARCHAR(50), -- Single, Album, EP
+            description TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
         "CREATE TABLE IF NOT EXISTS release_artists (
-            release_id INTEGER,
-            artist_id INTEGER,
+            release_id INT,
+            artist_id INT,
             PRIMARY KEY (release_id, artist_id),
             FOREIGN KEY (release_id) REFERENCES releases(id) ON DELETE CASCADE,
             FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE CASCADE
         )",
         "CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL UNIQUE,
-            password_hash TEXT NOT NULL,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(50) NOT NULL UNIQUE,
+            password_hash VARCHAR(255) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
         "CREATE TABLE IF NOT EXISTS enquiries (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT NOT NULL,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(150) NOT NULL,
             message TEXT NOT NULL,
             submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
         "CREATE TABLE IF NOT EXISTS merch (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            price DECIMAL(10,2) NOT NULL,
-            image_url TEXT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            category VARCHAR(50),
+            link VARCHAR(255),
+            price DECIMAL(10,2) NOT NULL DEFAULT 0,
+            image_url VARCHAR(255),
             description TEXT,
-            status TEXT DEFAULT 'available',
+            status VARCHAR(50) DEFAULT 'available',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
 
         "CREATE TABLE IF NOT EXISTS news (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
             content TEXT,
-            image_url TEXT,
+            image_url VARCHAR(255),
             published_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
         "CREATE TABLE IF NOT EXISTS demos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            artist_name TEXT NOT NULL,
-            email TEXT NOT NULL,
-            demo_url TEXT NOT NULL,
-            track_name TEXT,
-            instagram TEXT,
-            phone TEXT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            artist_name VARCHAR(255) NOT NULL,
+            email VARCHAR(150) NOT NULL,
+            demo_url VARCHAR(255) NOT NULL,
+            track_name VARCHAR(255),
+            instagram VARCHAR(100),
+            phone VARCHAR(50),
             message TEXT,
-            rating INTEGER DEFAULT 0,
-            status TEXT DEFAULT 'not_heard',
+            rating INT DEFAULT 0,
+            status VARCHAR(50) DEFAULT 'not_heard',
             submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
         "CREATE TABLE IF NOT EXISTS subscribers (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT NOT NULL UNIQUE,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            email VARCHAR(150) NOT NULL UNIQUE,
             subscribed_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
         "CREATE TABLE IF NOT EXISTS page_views (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            page_url TEXT,
-            ip_address TEXT,
-            user_agent TEXT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            page_url VARCHAR(255),
+            ip_address VARCHAR(50),
+            user_agent VARCHAR(255),
             visited_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
         "CREATE TABLE IF NOT EXISTS cover_settings (
-            id INTEGER PRIMARY KEY CHECK (id = 1),
-            tag_text TEXT,
+            id INT PRIMARY KEY,
+            tag_text VARCHAR(255),
             main_text TEXT,
-            sub_text TEXT,
-            highlight_text TEXT,
-            button_label TEXT,
-            button_link TEXT,
-            image_url TEXT,
-            video_url TEXT
+            sub_text VARCHAR(255),
+            highlight_text VARCHAR(255),
+            button_label VARCHAR(50),
+            button_link VARCHAR(255),
+            image_url VARCHAR(255),
+            video_url VARCHAR(255)
         )"
     ];
 
@@ -117,8 +118,7 @@ try {
         $pdo->exec($command);
     }
 
-    // Seed default admin user if not exists (admin / admin123) - FOR DEV ONLY
-    // In production, you'd want a registration script or manually add the hash.
+    // Seed default admin user if not exists (admin / admin123)
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = 'admin'");
     $stmt->execute();
     if ($stmt->fetchColumn() == 0) {
@@ -127,8 +127,16 @@ try {
         $stmt->execute([':pass' => $password]);
     }
 
+    // Seed default cover setting if not exists
+    $stmt = $pdo->query("SELECT COUNT(*) FROM cover_settings WHERE id = 1");
+    if ($stmt->fetchColumn() == 0) {
+        $pdo->exec("INSERT INTO cover_settings (id, main_text) VALUES (1, 'M-HOUSE MUSIC')");
+    }
+
 } catch (PDOException $e) {
     // For a production app you wouldn't echo this directly, but for dev it helps debugging
-    die("Connection failed: " . $e->getMessage());
+    // die("Connection failed: " . $e->getMessage());
+    // Fallback or silent fail might be better in prod, but echoing for debug provided per user request
+    die("DB Connection failed: " . $e->getMessage());
 }
 ?>
