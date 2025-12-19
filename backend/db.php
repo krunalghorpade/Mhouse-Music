@@ -5,7 +5,7 @@
 $host = 'localhost';
 $dbname = 'kratexin_mhousemusic';
 $username = 'kratexin_kratexin';
-$password = 'mymhousealias123';
+$password = 'adminpass123sql';
 
 // Override with local configuration if available
 if (file_exists(__DIR__ . '/config.local.php')) {

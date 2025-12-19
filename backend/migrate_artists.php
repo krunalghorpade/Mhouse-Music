@@ -31,7 +31,7 @@ try {
         $count = 0;
         foreach ($releases as $rel) {
             // Insert into join table if not exists
-            $stmt = $pdo->prepare("INSERT OR IGNORE INTO release_artists (release_id, artist_id) VALUES (?, ?)");
+            $stmt = $pdo->prepare("INSERT IGNORE INTO release_artists (release_id, artist_id) VALUES (?, ?)");
             $stmt->execute([$rel['id'], $rel['artist_id']]);
             $count++;
         }
