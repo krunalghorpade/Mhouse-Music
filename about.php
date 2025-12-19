@@ -23,6 +23,7 @@
             font-weight: 700;
         }
     </style>
+    <link rel="icon" type="image/png" href="assets/images/icon.png">
 </head>
 
 <body>

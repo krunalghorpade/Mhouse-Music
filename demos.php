@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-color: var(--accent-color);
         }
     </style>
+    <link rel="icon" type="image/png" href="assets/images/icon.png">
 </head>
 
 <body>

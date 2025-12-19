@@ -83,6 +83,7 @@ $news = $stmt->fetchAll();
             text-transform: uppercase;
         }
     </style>
+    <link rel="icon" type="image/png" href="assets/images/icon.png">
 </head>
 
 <body>

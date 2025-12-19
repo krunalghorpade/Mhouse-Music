@@ -14,6 +14,7 @@ $artists = $stmt->fetchAll();
     <style>
         /* Specific override for this page if needed, but style.css handles .artist-list-item */
     </style>
+    <link rel="icon" type="image/png" href="assets/images/icon.png">
 </head>
 
 <body>

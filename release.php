@@ -39,6 +39,7 @@ $links = json_decode($release['platform_links'], true) ?? [];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M-HOUSE | <?php echo htmlspecialchars($release['title']); ?></title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/png" href="assets/images/icon.png">
 </head>
 
 <body>

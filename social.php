@@ -72,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
             font-size: 1rem;
         }
     </style>
+    <link rel="icon" type="image/png" href="assets/images/icon.png">
 </head>
 
 <body>
