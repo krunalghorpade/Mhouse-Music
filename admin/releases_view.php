@@ -39,7 +39,10 @@ if (isset($_POST['save_cover'])) {
         if (!file_exists($target_dir))
             mkdir($target_dir, 0777, true);
 
-        $filename = time() . "_cover_" . basename($_FILES["cover_image"]["name"]);
+        // Sanitize filename
+        $raw_name = basename($_FILES["cover_image"]["name"]);
+        $clean_name = preg_replace('/[^a-zA-Z0-9._-]/', '_', $raw_name);
+        $filename = time() . "_cover_" . $clean_name;
         $target_file = $target_dir . $filename;
         if (move_uploaded_file($_FILES["cover_image"]["tmp_name"], $target_file)) {
             $image_url = "assets/uploads/" . $filename;
@@ -55,7 +58,10 @@ if (isset($_POST['save_cover'])) {
         if (!file_exists($target_dir))
             mkdir($target_dir, 0777, true);
 
-        $filename = time() . "_video_" . basename($_FILES["video_file"]["name"]);
+        // Sanitize filename
+        $raw_name = basename($_FILES["video_file"]["name"]);
+        $clean_name = preg_replace('/[^a-zA-Z0-9._-]/', '_', $raw_name);
+        $filename = time() . "_video_" . $clean_name;
         $target_file = $target_dir . $filename;
         if (move_uploaded_file($_FILES["video_file"]["tmp_name"], $target_file)) {
             $video_url = "assets/uploads/" . $filename;
@@ -72,7 +78,8 @@ if (isset($_POST['save_cover'])) {
         $_SESSION['flash_msg'] = "Video Hero settings updated successfully.";
     }
 
-    if (ob_get_length()) ob_end_clean();
+    if (ob_get_length())
+        ob_end_clean();
     header("Location: ?view=releases");
     exit;
 }
@@ -92,7 +99,10 @@ if (isset($_POST['save_release'])) {
         if (!file_exists($target_dir))
             mkdir($target_dir, 0777, true);
 
-        $filename = time() . "_rel_" . basename($_FILES["cover"]["name"]);
+        // Sanitize filename
+        $raw_name = basename($_FILES["cover"]["name"]);
+        $clean_name = preg_replace('/[^a-zA-Z0-9._-]/', '_', $raw_name);
+        $filename = time() . "_rel_" . $clean_name;
         $target_file = $target_dir . $filename;
 
         if (move_uploaded_file($_FILES["cover"]["tmp_name"], $target_file)) {
@@ -144,7 +154,8 @@ if (isset($_POST['save_release'])) {
         }
     }
 
-    if (ob_get_length()) ob_end_clean();
+    if (ob_get_length())
+        ob_end_clean();
     header("Location: ?view=releases");
     exit;
 }

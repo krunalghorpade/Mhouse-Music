@@ -34,7 +34,10 @@ if (isset($_POST['save_artist'])) {
         if (!file_exists($target_dir))
             mkdir($target_dir, 0777, true);
 
-        $filename = time() . "_" . basename($_FILES["image"]["name"]);
+        // Sanitize filename to prevent DB errors with special chars
+        $raw_name = basename($_FILES["image"]["name"]);
+        $clean_name = preg_replace('/[^a-zA-Z0-9._-]/', '_', $raw_name);
+        $filename = time() . "_" . $clean_name;
         $target_file = $target_dir . $filename;
 
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
@@ -66,7 +69,8 @@ if (isset($_POST['save_artist'])) {
         $_SESSION['flash_msg'] = "New artist added successfully.";
     }
 
-    if (ob_get_length()) ob_end_clean();
+    if (ob_get_length())
+        ob_end_clean();
     header("Location: ?view=artists");
     exit;
 }
