@@ -1,3 +1,4 @@
 data/database.sqlite
 .DS_Store
 assets/uploads/
+backend/config.local.php
