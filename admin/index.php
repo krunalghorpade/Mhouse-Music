@@ -119,117 +119,149 @@ $isLoggedIn = isset($_SESSION['user_id']);
                 </a>
             </nav>
 
+            <!-- Loading Overlay -->
+            <div id="loading-overlay" class="loading-overlay">
+                <div class="spinner"></div>
+                <div style="font-weight: 600; font-size: 1.1rem; color: var(--ios-text);">Saving Changes...</div>
+                <div style="font-size: 0.9rem; color: var(--ios-secondary); margin-top: 5px;">Please wait while we upload
+                    your files.</div>
+            </div>
+
             <!-- Main Content -->
             <main class="main-content">
                 <button id="mobile-menu-btn" class="ios-btn-text"
                     style="font-size: 2rem; margin-bottom: 1rem; display: none; min-width: 40px; min-height: 40px; cursor: pointer; z-index: 1000;">
                     <ion-icon name="menu-outline"></ion-icon>
                 </button>
-                <?php
-                $view = $_GET['view'] ?? 'dashboard';
 
-                if ($view === 'dashboard') {
-                    // Dashboard Stats
-                    $views = $pdo->query("SELECT COUNT(*) FROM page_views")->fetchColumn();
-
-                    // 1. Unheard demos
-                    $unheard_demos = $pdo->query("SELECT COUNT(*) FROM demos WHERE status = 'not_heard'")->fetchColumn();
-
-                    // 2. Total releases
-                    $total_releases = $pdo->query("SELECT COUNT(*) FROM releases")->fetchColumn();
-
-                    // 3. Total news
-                    $total_news = $pdo->query("SELECT COUNT(*) FROM news")->fetchColumn();
-
-                    // 4. Total artists
-                    $total_artists = $pdo->query("SELECT COUNT(*) FROM artists")->fetchColumn();
-
-                    // 5. Total subscribers & Joined this month
-                    $total_subscribers = $pdo->query("SELECT COUNT(*) FROM subscribers")->fetchColumn();
-                    $this_month_subs = $pdo->query("SELECT COUNT(*) FROM subscribers WHERE YEAR(subscribed_at) = YEAR(CURRENT_DATE()) AND MONTH(subscribed_at) = MONTH(CURRENT_DATE())")->fetchColumn();
-
-                    $recent_demos = $pdo->query("SELECT * FROM demos ORDER BY submitted_at DESC LIMIT 5")->fetchAll();
-                    ?>
-                    <h1 style="margin-bottom: 2rem;">Overview</h1>
-
-                    <div class="card-grid">
-                        <!-- Unheard Demos -->
-                        <div class="card">
-                            <div class="card-title">Unheard Demos</div>
-                            <div class="card-value" style="color: var(--ios-blue);"><?php echo number_format($unheard_demos); ?>
-                            </div>
-                        </div>
-
-                        <!-- Total Releases -->
-                        <div class="card">
-                            <div class="card-title">Total Releases</div>
-                            <div class="card-value"><?php echo number_format($total_releases); ?></div>
-                        </div>
-
-                        <!-- Total Artists -->
-                        <div class="card">
-                            <div class="card-title">Total Artists</div>
-                            <div class="card-value"><?php echo number_format($total_artists); ?></div>
-                        </div>
-
-                        <!-- Total News -->
-                        <div class="card">
-                            <div class="card-title">News Articles</div>
-                            <div class="card-value"><?php echo number_format($total_news); ?></div>
-                        </div>
-
-                        <!-- Subscribers -->
-                        <div class="card">
-                            <div class="card-title">Total Subscribers</div>
-                            <div class="card-value"><?php echo number_format($total_subscribers); ?></div>
-                            <div style="font-size: 0.8rem; color: var(--ios-secondary); margin-top: 0.5rem;">
-                                +<?php echo number_format($this_month_subs); ?> this month
-                            </div>
-                        </div>
-
-                        <!-- Page Views -->
-                        <div class="card">
-                            <div class="card-title">Total Page Views</div>
-                            <div class="card-value"><?php echo number_format($views); ?></div>
+                <!-- Flash Messages -->
+                <?php if (isset($_SESSION['flash_msg'])): ?>
+                    <div
+                        style="background: var(--ios-green); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); animation: slideDown 0.3s ease-out;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <ion-icon name="checkmark-circle" style="font-size: 1.2rem;"></ion-icon>
+                            <strong>Success:</strong> <?php echo $_SESSION['flash_msg']; ?>
                         </div>
                     </div>
+                    <?php unset($_SESSION['flash_msg']); ?>
+                <?php endif; ?>
 
-                    <h2>Recent Demos</h2>
-                    <div class="ios-list">
-                        <?php foreach ($recent_demos as $demo): ?>
-                            <div class="ios-list-item">
-                                <div>
-                                    <div style="font-weight: 600;"><?php echo htmlspecialchars($demo['artist_name']); ?></div>
-                                    <div style="font-size: 0.9rem; color: var(--ios-secondary);">
-                                        <?php echo htmlspecialchars($demo['track_name']); ?>
+                <?php if (isset($_SESSION['flash_error'])): ?>
+                    <div
+                        style="background: var(--ios-red); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); animation: slideDown 0.3s ease-out;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <ion-icon name="alert-circle" style="font-size: 1.2rem;"></ion-icon>
+                            <strong>Error:</strong> <?php echo $_SESSION['flash_error']; ?>
+                        </div>
+                    </div>
+                    <?php unset($_SESSION['flash_error']); ?>
+                <?php endif; ?>
+                    <?php
+                    $view = $_GET['view'] ?? 'dashboard';
+
+                    if ($view === 'dashboard') {
+                        // Dashboard Stats
+                        $views = $pdo->query("SELECT COUNT(*) FROM page_views")->fetchColumn();
+
+                        // 1. Unheard demos
+                        $unheard_demos = $pdo->query("SELECT COUNT(*) FROM demos WHERE status = 'not_heard'")->fetchColumn();
+
+                        // 2. Total releases
+                        $total_releases = $pdo->query("SELECT COUNT(*) FROM releases")->fetchColumn();
+
+                        // 3. Total news
+                        $total_news = $pdo->query("SELECT COUNT(*) FROM news")->fetchColumn();
+
+                        // 4. Total artists
+                        $total_artists = $pdo->query("SELECT COUNT(*) FROM artists")->fetchColumn();
+
+                        // 5. Total subscribers & Joined this month
+                        $total_subscribers = $pdo->query("SELECT COUNT(*) FROM subscribers")->fetchColumn();
+                        $this_month_subs = $pdo->query("SELECT COUNT(*) FROM subscribers WHERE YEAR(subscribed_at) = YEAR(CURRENT_DATE()) AND MONTH(subscribed_at) = MONTH(CURRENT_DATE())")->fetchColumn();
+
+                        $recent_demos = $pdo->query("SELECT * FROM demos ORDER BY submitted_at DESC LIMIT 5")->fetchAll();
+                        ?>
+                        <h1 style="margin-bottom: 2rem;">Overview</h1>
+
+                        <div class="card-grid">
+                            <!-- Unheard Demos -->
+                            <div class="card">
+                                <div class="card-title">Unheard Demos</div>
+                                <div class="card-value" style="color: var(--ios-blue);">
+                                    <?php echo number_format($unheard_demos); ?>
+                                </div>
+                            </div>
+
+                            <!-- Total Releases -->
+                            <div class="card">
+                                <div class="card-title">Total Releases</div>
+                                <div class="card-value"><?php echo number_format($total_releases); ?></div>
+                            </div>
+
+                            <!-- Total Artists -->
+                            <div class="card">
+                                <div class="card-title">Total Artists</div>
+                                <div class="card-value"><?php echo number_format($total_artists); ?></div>
+                            </div>
+
+                            <!-- Total News -->
+                            <div class="card">
+                                <div class="card-title">News Articles</div>
+                                <div class="card-value"><?php echo number_format($total_news); ?></div>
+                            </div>
+
+                            <!-- Subscribers -->
+                            <div class="card">
+                                <div class="card-title">Total Subscribers</div>
+                                <div class="card-value"><?php echo number_format($total_subscribers); ?></div>
+                                <div style="font-size: 0.8rem; color: var(--ios-secondary); margin-top: 0.5rem;">
+                                    +<?php echo number_format($this_month_subs); ?> this month
+                                </div>
+                            </div>
+
+                            <!-- Page Views -->
+                            <div class="card">
+                                <div class="card-title">Total Page Views</div>
+                                <div class="card-value"><?php echo number_format($views); ?></div>
+                            </div>
+                        </div>
+
+                        <h2>Recent Demos</h2>
+                        <div class="ios-list">
+                            <?php foreach ($recent_demos as $demo): ?>
+                                <div class="ios-list-item">
+                                    <div>
+                                        <div style="font-weight: 600;"><?php echo htmlspecialchars($demo['artist_name']); ?></div>
+                                        <div style="font-size: 0.9rem; color: var(--ios-secondary);">
+                                            <?php echo htmlspecialchars($demo['track_name']); ?>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <a href="?view=demos&search=<?php echo urlencode($demo['artist_name']); ?>"
+                                            class="ios-btn-text">View</a>
                                     </div>
                                 </div>
-                                <div>
-                                    <a href="?view=demos&search=<?php echo urlencode($demo['artist_name']); ?>"
-                                        class="ios-btn-text">View</a>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+                            <?php endforeach; ?>
+                        </div>
 
-                    <?php
-                } elseif ($view === 'artists') {
-                    include 'artists_view.php';
-                } elseif ($view === 'releases') {
-                    include 'releases_view.php';
-                } elseif ($view === 'news') {
-                    include 'news_view.php';
-                } elseif ($view === 'merch') {
-                    include 'merch_view.php';
-                } elseif ($view === 'demos') {
-                    include 'demos_view.php';
-                } elseif ($view === 'subscribers') {
-                    include 'subscribers_view.php';
-                } elseif ($view === 'stats') {
-                    include 'stats_view.php';
-                }
-                ?>
-            </main>
+                        <?php
+                    } elseif ($view === 'artists') {
+                        include 'artists_view.php';
+                    } elseif ($view === 'releases') {
+                        include 'releases_view.php';
+                    } elseif ($view === 'news') {
+                        include 'news_view.php';
+                    } elseif ($view === 'merch') {
+                        include 'merch_view.php';
+                    } elseif ($view === 'demos') {
+                        include 'demos_view.php';
+                    } elseif ($view === 'subscribers') {
+                        include 'subscribers_view.php';
+                    } elseif ($view === 'stats') {
+                        include 'stats_view.php';
+                    }
+                    ?>
+                </main>
         </div>
 
     <?php endif; ?>
@@ -260,6 +292,10 @@ $isLoggedIn = isset($_SESSION['user_id']);
 
     <!-- Mobile Menu Logic -->
     <script>
+        function showLoading() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileCloseBtn = document.getElementById('mobile-close-btn');

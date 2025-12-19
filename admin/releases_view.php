@@ -15,6 +15,7 @@ if (isset($_POST['delete_release'])) {
     $id = $_POST['id'];
     $stmt = $pdo->prepare("DELETE FROM releases WHERE id = ?");
     $stmt->execute([$id]);
+    $_SESSION['flash_msg'] = "Release deleted successfully.";
     echo "<script>window.location.href='?view=releases';</script>";
     exit;
 }
@@ -40,6 +41,8 @@ if (isset($_POST['save_cover'])) {
         $target_file = $target_dir . $filename;
         if (move_uploaded_file($_FILES["cover_image"]["tmp_name"], $target_file)) {
             $image_url = "assets/uploads/" . $filename;
+        } else {
+            $_SESSION['flash_error'] = "Failed to upload cover image.";
         }
     }
 
@@ -54,12 +57,18 @@ if (isset($_POST['save_cover'])) {
         $target_file = $target_dir . $filename;
         if (move_uploaded_file($_FILES["video_file"]["tmp_name"], $target_file)) {
             $video_url = "assets/uploads/" . $filename;
+        } else {
+            $_SESSION['flash_error'] = "Failed to upload video file.";
         }
     }
 
     // Insert or Update (ID is always 1)
     $stmt = $pdo->prepare("INSERT OR REPLACE INTO cover_settings (id, tag_text, main_text, sub_text, highlight_text, button_label, button_link, image_url, video_url) VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([$tag_text, $main_text, $sub_text, $highlight_text, $button_label, $button_link, $image_url, $video_url]);
+
+    if (!isset($_SESSION['flash_error'])) {
+        $_SESSION['flash_msg'] = "Video Hero settings updated successfully.";
+    }
 
     echo "<script>window.location.href='?view=releases';</script>";
     exit;
@@ -85,7 +94,11 @@ if (isset($_POST['save_release'])) {
 
         if (move_uploaded_file($_FILES["cover"]["tmp_name"], $target_file)) {
             $cover_url = "assets/uploads/" . $filename;
+        } else {
+            $_SESSION['flash_error'] = "Failed to upload cover art.";
         }
+    } elseif (isset($_FILES['cover']) && $_FILES['cover']['error'] != 4) {
+        $_SESSION['flash_error'] = "Cover upload error: " . $_FILES['cover']['error'];
     }
 
     $links = [];
@@ -107,11 +120,13 @@ if (isset($_POST['save_release'])) {
         // Update Release Info
         $stmt = $pdo->prepare("UPDATE releases SET title=?, type=?, release_date=?, cover_url=?, platform_links=?, description=? WHERE id=?");
         $stmt->execute([$title, $type, $release_date, $cover_url, $platform_links, $description, $release_id]);
+        $_SESSION['flash_msg'] = "Release updated successfully.";
     } else {
         // Insert Release Info
         $stmt = $pdo->prepare("INSERT INTO releases (title, type, release_date, cover_url, platform_links, description) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([$title, $type, $release_date, $cover_url, $platform_links, $description]);
         $release_id = $pdo->lastInsertId();
+        $_SESSION['flash_msg'] = "New release added successfully.";
     }
 
     // Handle Artists (Many-to-Many)
@@ -184,7 +199,7 @@ if (!$cover) {
 <!-- Cover Change Section (Video Hero) -->
 <div class="card" style="margin-bottom: 2rem;">
     <h2 style="margin-bottom: 1rem;">Video Hero Settings</h2>
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" action="?view=releases" enctype="multipart/form-data" onsubmit="showLoading()">
         <input type="hidden" name="current_cover_image" value="<?php echo $cover['image_url'] ?? ''; ?>">
         <input type="hidden" name="current_video_url" value="<?php echo $cover['video_url'] ?? ''; ?>">
 
@@ -263,7 +278,7 @@ if (!$cover) {
 </h2>
 
 <div class="card" style="max-width: 600px;">
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" action="?view=releases" enctype="multipart/form-data" onsubmit="showLoading()">
         <input type="hidden" name="id" value="<?php echo $editRelease['id'] ?? ''; ?>">
         <input type="hidden" name="current_cover_url" value="<?php echo $editRelease['cover_url'] ?? ''; ?>">
 

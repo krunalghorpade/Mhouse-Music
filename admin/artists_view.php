@@ -1,11 +1,21 @@
 <?php
 // admin/artists_view.php
 
+// Check for POST Max Size Limit Exceeded
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST) && empty($_FILES) && $_SERVER['CONTENT_LENGTH'] > 0) {
+    $max_size = ini_get('post_max_size');
+    echo "<div style='color: white; background: var(--ios-red); padding: 1rem; border-radius: 8px; margin-bottom: 2rem; text-align: center;'>
+            <strong>Error:</strong> The uploaded file exceeds the server limit of $max_size.<br>
+            Please upload a smaller file or update your PHP configuration.
+          </div>";
+}
+
 // Handle Delete
 if (isset($_POST['delete_artist'])) {
     $id = $_POST['id'];
     $stmt = $pdo->prepare("DELETE FROM artists WHERE id = ?");
     $stmt->execute([$id]);
+    $_SESSION['flash_msg'] = "Artist deleted successfully.";
     echo "<script>window.location.href='?view=artists';</script>";
     exit;
 }
@@ -27,7 +37,12 @@ if (isset($_POST['save_artist'])) {
 
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
             $image_url = "assets/uploads/" . $filename;
+        } else {
+            $_SESSION['flash_error'] = "Failed to upload image. Check permissions.";
         }
+    } elseif (isset($_FILES['image']) && $_FILES['image']['error'] != 4) {
+        // Error other than "no file uploaded" (4)
+        $_SESSION['flash_error'] = "Image upload error code: " . $_FILES['image']['error'];
     }
 
     $socials = [];
@@ -42,9 +57,11 @@ if (isset($_POST['save_artist'])) {
     if (!empty($_POST['id'])) {
         $stmt = $pdo->prepare("UPDATE artists SET name=?, bio=?, image_url=?, social_links=? WHERE id=?");
         $stmt->execute([$name, $bio, $image_url, $social_links, $_POST['id']]);
+        $_SESSION['flash_msg'] = "Artist updated successfully.";
     } else {
         $stmt = $pdo->prepare("INSERT INTO artists (name, bio, image_url, social_links) VALUES (?, ?, ?, ?)");
         $stmt->execute([$name, $bio, $image_url, $social_links]);
+        $_SESSION['flash_msg'] = "New artist added successfully.";
     }
 
     echo "<script>window.location.href='?view=artists';</script>";
@@ -103,7 +120,8 @@ $socials = $editArtist ? json_decode($editArtist['social_links'], true) : [];
 </h2>
 
 <div class="card" style="max-width: 600px;">
-    <form method="POST" enctype="multipart/form-data">
+    <!-- Explicit action to ?view=artists to prevent sticking in edit mode on refresh/post -->
+    <form method="POST" action="?view=artists" enctype="multipart/form-data" onsubmit="showLoading()">
         <input type="hidden" name="id" value="<?php echo $editArtist['id'] ?? ''; ?>">
         <input type="hidden" name="current_image_url" value="<?php echo $editArtist['image_url'] ?? ''; ?>">
 
