@@ -7,6 +7,11 @@ $dbname = 'kratexin_mhousemusic';
 $username = 'kratexin_kratexin';
 $password = 'mymhousealias123';
 
+// Override with local configuration if available
+if (file_exists(__DIR__ . '/config.local.php')) {
+    include __DIR__ . '/config.local.php';
+}
+
 try {
     // Connect to MySQL
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
