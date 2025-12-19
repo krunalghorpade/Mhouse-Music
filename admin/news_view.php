@@ -16,6 +16,8 @@ if (isset($_POST['delete_news'])) {
     $stmt = $pdo->prepare("DELETE FROM news WHERE id = ?");
     $stmt->execute([$id]);
     $_SESSION['flash_msg'] = "News article deleted successfully.";
+    if (ob_get_length())
+        ob_end_clean();
     header("Location: ?view=news");
     exit;
 }
@@ -55,6 +57,8 @@ if (isset($_POST['save_news'])) {
         $_SESSION['flash_msg'] = "New article published successfully.";
     }
 
+    if (ob_get_length())
+        ob_end_clean();
     header("Location: ?view=news");
     exit;
 }

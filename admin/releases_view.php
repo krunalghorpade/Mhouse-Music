@@ -16,6 +16,8 @@ if (isset($_POST['delete_release'])) {
     $stmt = $pdo->prepare("DELETE FROM releases WHERE id = ?");
     $stmt->execute([$id]);
     $_SESSION['flash_msg'] = "Release deleted successfully.";
+    if (ob_get_length())
+        ob_end_clean();
     header("Location: ?view=releases");
     exit;
 }
@@ -70,7 +72,8 @@ if (isset($_POST['save_cover'])) {
         $_SESSION['flash_msg'] = "Video Hero settings updated successfully.";
     }
 
-    echo "<script>window.location.href='?view=releases';</script>";
+    if (ob_get_length()) ob_end_clean();
+    header("Location: ?view=releases");
     exit;
 }
 
@@ -141,6 +144,7 @@ if (isset($_POST['save_release'])) {
         }
     }
 
+    if (ob_get_length()) ob_end_clean();
     header("Location: ?view=releases");
     exit;
 }

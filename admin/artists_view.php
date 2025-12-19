@@ -16,6 +16,8 @@ if (isset($_POST['delete_artist'])) {
     $stmt = $pdo->prepare("DELETE FROM artists WHERE id = ?");
     $stmt->execute([$id]);
     $_SESSION['flash_msg'] = "Artist deleted successfully.";
+    if (ob_get_length())
+        ob_end_clean();
     header("Location: ?view=artists");
     exit;
 }
@@ -64,6 +66,7 @@ if (isset($_POST['save_artist'])) {
         $_SESSION['flash_msg'] = "New artist added successfully.";
     }
 
+    if (ob_get_length()) ob_end_clean();
     header("Location: ?view=artists");
     exit;
 }
