@@ -42,5 +42,3 @@
     <a href="https://kratex.in" target="_blank">Kratex&trade;</a>
     <a href="about.php">About</a>
 </div>
-
-<script src="assets/js/main.js"></script>

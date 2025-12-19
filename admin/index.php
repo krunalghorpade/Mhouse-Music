@@ -122,7 +122,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
             <!-- Main Content -->
             <main class="main-content">
                 <button id="mobile-menu-btn" class="ios-btn-text"
-                    style="font-size: 2rem; margin-bottom: 1rem; display: none;">
+                    style="font-size: 2rem; margin-bottom: 1rem; display: none; min-width: 40px; min-height: 40px; cursor: pointer; z-index: 1000;">
                     <ion-icon name="menu-outline"></ion-icon>
                 </button>
                 <?php
@@ -146,8 +146,8 @@ $isLoggedIn = isset($_SESSION['user_id']);
 
                     // 5. Total subscribers & Joined this month
                     $total_subscribers = $pdo->query("SELECT COUNT(*) FROM subscribers")->fetchColumn();
-                    $this_month_subs = $pdo->query("SELECT COUNT(*) FROM subscribers WHERE strftime('%Y-%m', subscribed_at) = strftime('%Y-%m', 'now')")->fetchColumn(); // SQLite specific date function
-            
+                    $this_month_subs = $pdo->query("SELECT COUNT(*) FROM subscribers WHERE YEAR(subscribed_at) = YEAR(CURRENT_DATE()) AND MONTH(subscribed_at) = MONTH(CURRENT_DATE())")->fetchColumn();
+
                     $recent_demos = $pdo->query("SELECT * FROM demos ORDER BY submitted_at DESC LIMIT 5")->fetchAll();
                     ?>
                     <h1 style="margin-bottom: 2rem;">Overview</h1>
@@ -260,21 +260,25 @@ $isLoggedIn = isset($_SESSION['user_id']);
 
     <!-- Mobile Menu Logic -->
     <script>
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileCloseBtn = document.getElementById('mobile-close-btn');
-        const sidebar = document.querySelector('.sidebar');
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileCloseBtn = document.getElementById('mobile-close-btn');
+            const sidebar = document.querySelector('.sidebar');
 
-        if (mobileMenuBtn && sidebar) {
-            mobileMenuBtn.addEventListener('click', () => {
-                sidebar.classList.add('active');
-            });
-        }
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    sidebar.classList.add('active');
+                });
+            }
 
-        if (mobileCloseBtn && sidebar) {
-            mobileCloseBtn.addEventListener('click', () => {
-                sidebar.classList.remove('active');
-            });
-        }
+            if (mobileCloseBtn && sidebar) {
+                mobileCloseBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    sidebar.classList.remove('active');
+                });
+            }
+        });
     </script>
 </body>
 

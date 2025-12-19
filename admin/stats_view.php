@@ -11,28 +11,28 @@ $date_limit = '';
 switch ($range) {
     case '7days':
         $date_limit = date('Y-m-d', strtotime('-7 days'));
-        $date_condition = "WHERE visited_at >= '$date_limit'";
+        $date_condition = "WHERE visited_at >= '$date_limit' AND page_url NOT LIKE '%/admin%'";
         // Generate last 7 days labels to ensure continuity
         for ($i = 6; $i >= 0; $i--)
             $labels_php[] = date('Y-m-d', strtotime("-$i days"));
         break;
     case '28days':
         $date_limit = date('Y-m-d', strtotime('-28 days'));
-        $date_condition = "WHERE visited_at >= '$date_limit'";
+        $date_condition = "WHERE visited_at >= '$date_limit' AND page_url NOT LIKE '%/admin%'";
         $labels_php = []; // We'll let data drive it or sparse
         break;
     case '12months':
         $date_limit = date('Y-m-d', strtotime('-1 year'));
-        $date_condition = "WHERE visited_at >= '$date_limit'";
+        $date_condition = "WHERE visited_at >= '$date_limit' AND page_url NOT LIKE '%/admin%'";
         $group_format = '%Y-%m'; // Group by month
         break;
     case 'lifetime':
-        $date_condition = ""; // All time
+        $date_condition = "WHERE page_url NOT LIKE '%/admin%'"; // All time but no admin
         $group_format = '%Y-%m';
         break;
     default:
         $date_limit = date('Y-m-d', strtotime('-7 days'));
-        $date_condition = "WHERE visited_at >= '$date_limit'";
+        $date_condition = "WHERE visited_at >= '$date_limit' AND page_url NOT LIKE '%/admin%'";
 }
 
 // 2. Fetch Data for Key Metrics
@@ -42,7 +42,7 @@ $sql_views = "SELECT COUNT(*) FROM page_views $date_condition";
 $total_views = $pdo->query($sql_views)->fetchColumn();
 
 // B1. Total Unique Page Views (Unique combination of IP and Page URL)
-$sql_unique_views = "SELECT COUNT(*) FROM (SELECT DISTINCT ip_address, page_url FROM page_views $date_condition)";
+$sql_unique_views = "SELECT COUNT(*) FROM (SELECT DISTINCT ip_address, page_url FROM page_views $date_condition) as unique_hits";
 $total_unique_views = $pdo->query($sql_unique_views)->fetchColumn();
 
 // B2. Total Unique Visitors (approximating 'Clicks' as Visits)
@@ -66,14 +66,14 @@ $conversion = ($total_visitors > 0) ? round(($total_visitors / $total_views) * 1
 // 3. Prepare Chart Data (Grouped by Date)
 // We need two datasets: Views and Visitors over time
 if ($range == '12months' || $range == 'lifetime') {
-    // SQLite syntax for grouping by month
-    $sql_chart = "SELECT strftime('%Y-%m', visited_at) as period, COUNT(DISTINCT ip_address || page_url) as views, COUNT(DISTINCT ip_address) as visitors 
+    // MySQL syntax for grouping by month
+    $sql_chart = "SELECT DATE_FORMAT(visited_at, '%Y-%m') as period, COUNT(DISTINCT CONCAT(ip_address, page_url)) as views, COUNT(DISTINCT ip_address) as visitors 
                   FROM page_views $date_condition 
                   GROUP BY period 
                   ORDER BY period ASC";
 } else {
     // Group by day
-    $sql_chart = "SELECT strftime('%Y-%m-%d', visited_at) as period, COUNT(DISTINCT ip_address || page_url) as views, COUNT(DISTINCT ip_address) as visitors 
+    $sql_chart = "SELECT DATE_FORMAT(visited_at, '%Y-%m-%d') as period, COUNT(DISTINCT CONCAT(ip_address, page_url)) as views, COUNT(DISTINCT ip_address) as visitors 
                   FROM page_views $date_condition 
                   GROUP BY period 
                   ORDER BY period ASC";
