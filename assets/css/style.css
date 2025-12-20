@@ -684,3 +684,9 @@ header.transparent.scrolled {
 .btn-minimal svg {
     font-size: 1.2rem;
 }
+.card-subtitle {
+    font-size: 0.9rem;
+    color: var(--secondary-text);
+    margin-top: 0.2rem;
+    text-transform: uppercase;
+}

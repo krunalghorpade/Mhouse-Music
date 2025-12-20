@@ -20,24 +20,29 @@ $merch = $stmt->fetchAll();
     <main class="container">
         <h1 class="page-title">Shop</h1>
 
-        <div class="grid">
-            <?php foreach ($merch as $item): ?>
-                <a href="<?php echo htmlspecialchars($item['link'] ?? '#'); ?>" target="_blank" class="card">
-                    <div class="card-image">
-                        <img src="<?php echo htmlspecialchars($item['image_url']); ?>"
-                            alt="<?php echo htmlspecialchars($item['name']); ?>">
-                    </div>
-                    <div class="card-info" style="display: block;">
-                        <div class="card-title"><?php echo htmlspecialchars($item['name']); ?></div>
-                        <div
-                            style="font-size: 0.9rem; color: var(--secondary-text); margin-top: 0.2rem; text-transform: uppercase;">
-                            <?php echo htmlspecialchars($item['category'] ?? 'Unisex'); ?>
+        <?php if (empty($merch)): ?>
+            <p style="color: var(--secondary-text); margin-top: 2rem;">No merch items available at the moment.</p>
+        <?php else: ?>
+            <div class="grid">
+                <?php foreach ($merch as $item): ?>
+                    <a href="<?php echo htmlspecialchars($item['link'] ?? '#'); ?>" target="_blank" class="card">
+                        <div class="card-image">
+                            <img src="<?php echo htmlspecialchars($item['image_url']); ?>"
+                                alt="<?php echo htmlspecialchars($item['name']); ?>">
                         </div>
-                    </div>
-                </a>
-            <?php endforeach; ?>
-        </div>
+                        <div class="card-info">
+                            <div class="card-title"><?php echo htmlspecialchars($item['name']); ?></div>
+                            <div class="card-subtitle">
+                                <?php echo htmlspecialchars($item['category'] ?? 'Unisex'); ?>
+                            </div>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </main>
+
+    <?php include 'footer.php'; ?>
     <script src="assets/js/main.js"></script>
 </body>
 
