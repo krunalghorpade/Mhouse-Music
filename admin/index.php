@@ -48,6 +48,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
@@ -92,9 +93,6 @@ $isLoggedIn = isset($_SESSION['user_id']);
                 <a href="?view=releases"
                     class="nav-item <?php echo ($_GET['view'] ?? '') == 'releases' ? 'active' : ''; ?>">
                     <ion-icon name="musical-notes-outline"></ion-icon> Releases
-                </a>
-                <a href="?view=news" class="nav-item <?php echo ($_GET['view'] ?? '') == 'news' ? 'active' : ''; ?>">
-                    <ion-icon name="newspaper-outline"></ion-icon> News
                 </a>
                 <a href="?view=merch" class="nav-item <?php echo ($_GET['view'] ?? '') == 'merch' ? 'active' : ''; ?>">
                     <ion-icon name="shirt-outline"></ion-icon> Shop
@@ -173,13 +171,10 @@ $isLoggedIn = isset($_SESSION['user_id']);
                     // 2. Total releases
                     $total_releases = $pdo->query("SELECT COUNT(*) FROM releases")->fetchColumn();
 
-                    // 3. Total news
-                    $total_news = $pdo->query("SELECT COUNT(*) FROM news")->fetchColumn();
-
                     // 4. Total artists
                     $total_artists = $pdo->query("SELECT COUNT(*) FROM artists")->fetchColumn();
 
-                    // 5. Total subscribers & Joined this month
+                    // 5. Total subscribers
                     $total_subscribers = $pdo->query("SELECT COUNT(*) FROM subscribers")->fetchColumn();
                     $this_month_subs = $pdo->query("SELECT COUNT(*) FROM subscribers WHERE YEAR(subscribed_at) = YEAR(CURRENT_DATE()) AND MONTH(subscribed_at) = MONTH(CURRENT_DATE())")->fetchColumn();
 
@@ -206,12 +201,6 @@ $isLoggedIn = isset($_SESSION['user_id']);
                         <div class="card">
                             <div class="card-title">Total Artists</div>
                             <div class="card-value"><?php echo number_format($total_artists); ?></div>
-                        </div>
-
-                        <!-- Total News -->
-                        <div class="card">
-                            <div class="card-title">News Articles</div>
-                            <div class="card-value"><?php echo number_format($total_news); ?></div>
                         </div>
 
                         <!-- Subscribers -->
@@ -253,8 +242,6 @@ $isLoggedIn = isset($_SESSION['user_id']);
                     include 'artists_view.php';
                 } elseif ($view === 'releases') {
                     include 'releases_view.php';
-                } elseif ($view === 'news') {
-                    include 'news_view.php';
                 } elseif ($view === 'merch') {
                     include 'merch_view.php';
                 } elseif ($view === 'demos') {

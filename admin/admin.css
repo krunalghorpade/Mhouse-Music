@@ -180,6 +180,19 @@ h2 {
     font-size: 1rem;
 }
 
+/* Font Awesome Support */
+.nav-item i,
+.ios-btn i,
+.ios-btn-text i {
+    font-size: 1.2rem;
+    vertical-align: middle;
+}
+
+.nav-item i {
+    min-width: 20px;
+    text-align: center;
+}
+
 /* Form Inputs */
 input[type="text"],
 input[type="email"],

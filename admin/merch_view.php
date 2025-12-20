@@ -6,7 +6,10 @@ if (isset($_POST['delete_merch'])) {
     $id = $_POST['id'];
     $stmt = $pdo->prepare("DELETE FROM merch WHERE id = ?");
     $stmt->execute([$id]);
-    echo "<script>window.location.href='?view=merch';</script>";
+    $_SESSION['flash_msg'] = "Merch item deleted.";
+    if (ob_get_length())
+        ob_end_clean();
+    header("Location: ?view=merch");
     exit;
 }
 
@@ -20,15 +23,17 @@ if (isset($_POST['save_merch'])) {
     // We will set a dummy price or 0 if not provided, since display hides it.
     $price = 0;
 
-    $image_url = $_POST['current_image_url'] ?? '';
-
     // Handle Image Upload
+    $image_url = $_POST['current_image_url'] ?? '';
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
         $target_dir = "../assets/uploads/";
         if (!file_exists($target_dir))
             mkdir($target_dir, 0777, true);
 
-        $filename = time() . "_merch_" . basename($_FILES["image"]["name"]);
+        // Sanitize filename
+        $raw_name = basename($_FILES["image"]["name"]);
+        $clean_name = preg_replace('/[^a-zA-Z0-9._-]/', '_', $raw_name);
+        $filename = time() . "_merch_" . $clean_name;
         $target_file = $target_dir . $filename;
 
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
@@ -42,13 +47,17 @@ if (isset($_POST['save_merch'])) {
         // Update
         $stmt = $pdo->prepare("UPDATE merch SET name=?, category=?, link=?, image_url=?, price=0 WHERE id=?");
         $stmt->execute([$name, $category, $link, $image_url, $id]);
+        $_SESSION['flash_msg'] = "Merch updated successfully.";
     } else {
         // Insert
         $stmt = $pdo->prepare("INSERT INTO merch (name, category, link, image_url, price) VALUES (?, ?, ?, ?, 0)");
         $stmt->execute([$name, $category, $link, $image_url]);
+        $_SESSION['flash_msg'] = "New merch item added successfully.";
     }
 
-    echo "<script>window.location.href='?view=merch';</script>";
+    if (ob_get_length())
+        ob_end_clean();
+    header("Location: ?view=merch");
     exit;
 }
 
@@ -107,7 +116,7 @@ if (isset($_GET['edit'])) {
 <h2 id="merch-form"><?php echo $editItem ? 'Edit Item' : 'Add New Item'; ?></h2>
 
 <div class="card" style="max-width: 600px;">
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" action="?view=merch" enctype="multipart/form-data" onsubmit="showLoading()">
         <input type="hidden" name="id" value="<?php echo $editItem['id'] ?? ''; ?>">
         <input type="hidden" name="current_image_url" value="<?php echo $editItem['image_url'] ?? ''; ?>">
 

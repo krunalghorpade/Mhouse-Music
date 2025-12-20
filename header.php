@@ -13,7 +13,6 @@
         <!-- Reordered -->
         <a href="merch.php">Merch</a>
         <a href="releases.php">Music</a>
-        <a href="news.php">News</a>
 
         <a href="artists.php">Artists</a>
         <a href="social.php">Social</a>
@@ -34,7 +33,6 @@
 <div class="mobile-nav">
     <a href="merch.php">Merch</a>
     <a href="releases.php">Music</a>
-    <a href="news.php">News</a>
 
     <a href="artists.php">Artists</a>
     <a href="social.php">Social</a>

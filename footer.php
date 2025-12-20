@@ -40,7 +40,6 @@ if (!isset($footer_artists)) {
                 <a href="merch.php" style="font-size: 0.9rem;">Merch</a>
                 <a href="demos.php" style="font-size: 0.9rem;">Demos</a>
 
-                <a href="news.php" style="font-size: 0.9rem;">News</a>
                 <a href="about.php" style="font-size: 0.9rem;">About</a>
             </div>
         </div>

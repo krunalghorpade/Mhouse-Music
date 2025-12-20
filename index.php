@@ -29,10 +29,6 @@ $releases = $pdo->query($sql)->fetchAll();
 // 3. Merch (4)
 $stmt = $pdo->query("SELECT * FROM merch WHERE status = 'available' ORDER BY created_at DESC LIMIT 4");
 $merch = $stmt->fetchAll();
-
-// 4. News (4)
-$stmt = $pdo->query("SELECT * FROM news ORDER BY published_date DESC LIMIT 4");
-$news = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -116,7 +112,7 @@ $news = $stmt->fetchAll();
                     }, 2000);
 
                 }, 100);
-            }, 7000);
+            }, 9000);
             // User: "every 7 seconds for 2 seconds". 
             // Value: 7000ms interval. 
             // But if I set interval to 7000, it will happen every 7s.
@@ -175,28 +171,7 @@ $news = $stmt->fetchAll();
             </div>
         </section>
 
-        <!-- 4. News -->
-        <section>
-            <div class="section-header">
-                <h2>News</h2>
-                <a href="news.php" class="view-all">Read All →</a>
-            </div>
-            <div class="grid">
-                <?php foreach ($news as $item): ?>
-                    <div class="card">
-                        <div class="card-image aspect-4-5">
-                            <img src="<?php echo htmlspecialchars($item['image_url']); ?>">
-                        </div>
-                        <div class="card-info" style="display: block;">
-                            <div class="card-meta" style="text-align: left; margin-bottom: 0.5rem;">
-                                <?php echo date('d M', strtotime($item['published_date'])); ?>
-                            </div>
-                            <div class="card-title"><?php echo htmlspecialchars($item['title']); ?></div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </section>
+
 
 
 
