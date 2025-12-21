@@ -16,8 +16,11 @@ if (!$artist) {
     exit;
 }
 
-// Fetch Artist's Releases
-$stmt = $pdo->prepare("SELECT * FROM releases WHERE artist_id = ? ORDER BY release_date DESC");
+// Fetch Artist's Releases (Using Join Table)
+$stmt = $pdo->prepare("SELECT r.* FROM releases r 
+                       JOIN release_artists ra ON r.id = ra.release_id 
+                       WHERE ra.artist_id = ? 
+                       ORDER BY r.release_date DESC");
 $stmt->execute([$id]);
 $releases = $stmt->fetchAll();
 ?>

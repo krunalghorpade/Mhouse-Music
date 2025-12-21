@@ -234,6 +234,19 @@ header {
     transform: translateX(0);
 }
 
+/* Mobile Nav */
+.close-menu-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1003;
+}
+
 .mobile-nav a {
     font-size: 2rem;
     font-weight: 700;
@@ -253,9 +266,16 @@ header {
 /* General Grid */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    /* Reduced gap */
+    grid-template-columns: repeat(2, 1fr);
+    /* Mobile: 2 columns */
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
 }
 
 /* Cards (Merch, Releases) */
@@ -684,6 +704,7 @@ header.transparent.scrolled {
 .btn-minimal svg {
     font-size: 1.2rem;
 }
+
 .card-subtitle {
     font-size: 0.9rem;
     color: var(--secondary-text);

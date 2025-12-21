@@ -34,33 +34,58 @@
             <h1 class="page-title">This is Us! M-House</h1>
 
             <article class="narrative" style="margin: 0 auto; text-align: center;">
-                <p>
-                    It started in a small room in Pune, with nothing but a laptop and a deep obsession with the rhythm
-                    of Maharashtra. <span class="highlight">M-House Music</span> wasn't born in a boardroom; it was born
-                    on the dancefloor, in the chaos of the Ganpati Visarjan, and in the silence of the studio at 4 AM.
-                </p>
+                <h1 style="margin-bottom: 2rem; color: var(--accent-color);">M-House: The Global Stage for the Marathi
+                    Electronic Revolution</h1>
+                <h2 style="margin-bottom: 2rem; font-size: 1.5rem; color: #fff;">Redefining Indian Electronic Music, One
+                    Beat at a Time.</h2>
 
                 <p>
-                    We realized that the world was listening to House, Techno, and Trance, but they hadn't heard the
-                    soul of India yet. Not the Bollywood remixes, but the raw, unfiltered beat of the <span
-                        class="highlight">Nashik Dhol</span> fused with the industrial precision of Berlin Techno.
+                    M-House is more than just a record label; it is a sonic movement. Founded by the visionary DJ and
+                    music producer Kratex, M-House was born from a singular mission: to take the vibrant, rhythmic soul
+                    of Marathi music and fuse it with the high-energy pulse of global House and EDM.
+                </p>
+                <p>
+                    We are pioneering the "M-House" genre—a distinct sound that bridges the gap between the traditional
+                    dhol-tasha pathaks of Maharashtra and the mainstages of international music festivals.
                 </p>
 
+                <br><br>
+
+                <h2 style="margin-bottom: 2rem; font-size: 1.5rem; color: #fff;">The M-House Sound</h2>
                 <p>
-                    <span class="highlight">Kratex</span> founded this label with a singular vision: to create a sound
-                    that is undeniably Indian and unapologetically global. We don't just release music; we curate
-                    experiences. We bridge the gap between the traditional folk instruments of the Sahyadris and the
-                    synthesizers of tomorrow.
+                    What defines the M-House sound? It is the alchemy of heritage and innovation. We strip away the
+                    boundaries of regional music, blending raw Marathi folk vocals, Sambhal rhythms, and Halgi beats
+                    with cutting-edge electronic synthesis, deep basslines, and modern house grooves.
+                </p>
+                <p>
+                    Whether it’s a high-octane club banger or a soulful melodic house track, our releases are designed
+                    to resonate with audiences worldwide while staying deeply rooted in Indian culture.
                 </p>
 
+                <br><br>
+
+                <h2 style="margin-bottom: 2rem; font-size: 1.5rem; color: #fff;">A Platform for Rising Talent</h2>
                 <p>
-                    This is distinct. This is loud. This is <span class="highlight">M-House</span>.
+                    M-House is dedicated to the next generation of artists. We believe that regional Indian talent
+                    deserves a global spotlight. As a premier Indian record label, we act as an incubator for rising
+                    producers, vocalists, and songwriters who are daring enough to experiment.
+                </p>
+                <p>
+                    We provide the platform, the distribution, and the guidance for artists to showcase their innovative
+                    sounds, creating a community where cultural roots meet contemporary dance music.
                 </p>
 
+                <br><br>
+
+                <h2 style="margin-bottom: 2rem; font-size: 1.5rem; color: #fff;">The Vision: From Local to Global</h2>
                 <p>
-                    We are a collective of producers, DJs, and visual artists pushing the boundaries of what "Indian
-                    Electronic Music" can mean. From deep, melodic soundscapes to high-octane festival anthems, our
-                    catalog is a testament to the versatility of our culture.
+                    Under the leadership of Kratex, M-House is pushing the envelope of what regional Indian music can
+                    achieve. Our vision is clear: to ensure that when the world thinks of Indian Electronic Music, they
+                    hear the thump of Maharashtra.
+                </p>
+
+                <p style="font-weight: 700; color: var(--accent-color);">
+                    Join the movement. Experience the fusion. Welcome to M-House.
                 </p>
 
                 <div

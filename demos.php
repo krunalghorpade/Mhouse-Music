@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = trim($_POST['phone']);
     $message = trim($_POST['message']);
 
-    if ($artist_name && $email && $demo_url) {
+    if ($artist_name && $email && $demo_url && $track_name && $instagram) {
         try {
             $stmt = $pdo->prepare("INSERT INTO demos (artist_name, email, demo_url, track_name, instagram, phone, message) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$artist_name, $email, $demo_url, $track_name, $instagram, $phone, $message]);
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-HOUSE | Submit Demo</title>
+    <title>M-HOUSE | Send Demos</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         .form-group {
@@ -109,28 +109,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-group">
-                    <label>Track Name / Album Title</label>
-                    <input type="text" name="track_name">
-                </div>
-
-                <div class="form-row">
-                    <div>
-                        <label>Instagram ID</label>
-                        <input type="text" name="instagram" placeholder="@user">
-                    </div>
-                    <div>
-                        <label>Phone Number</label>
-                        <input type="tel" name="phone">
-                    </div>
+                    <label>Track Name / Album Title *</label>
+                    <input type="text" name="track_name" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Message / Bio</label>
+                    <label>Instagram ID *</label>
+                    <input type="text" name="instagram" placeholder="@user" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number (Optional)</label>
+                    <input type="tel" name="phone">
+                </div>
+
+                <div class="form-group">
+                    <label>Message / Bio (Optional)</label>
                     <textarea name="message" rows="5"></textarea>
                 </div>
 
                 <button type="submit" class="btn"
-                    style="width: 100%; border: none; cursor: pointer; background: var(--accent-color); color: white;">Submit
+                    style="width: 100%; border: none; cursor: pointer; background: var(--accent-color); color: white;">Send
                     Demo</button>
             </form>
         </div>

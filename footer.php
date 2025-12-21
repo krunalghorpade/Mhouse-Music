@@ -38,7 +38,7 @@ if (!isset($footer_artists)) {
                 <a href="artists.php" style="font-size: 0.9rem;">Artists</a>
 
                 <a href="merch.php" style="font-size: 0.9rem;">Merch</a>
-                <a href="demos.php" style="font-size: 0.9rem;">Demos</a>
+                <a href="demos.php" style="font-size: 0.9rem;">Send Demos</a>
 
                 <a href="about.php" style="font-size: 0.9rem;">About</a>
             </div>

@@ -30,6 +30,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 spans[2].style.transform = 'none';
             }
         });
+
+        // Close Button Logic
+        const closeBtn = document.querySelector('.close-menu-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                mobileNav.classList.remove('active');
+
+                // Reset Hamburger
+                const spans = hamburger.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            });
+        }
     }
 
     // 3. Scroll Effect for Transparent Header

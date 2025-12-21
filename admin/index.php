@@ -101,7 +101,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
                 <div style="height: 1px; background: var(--ios-separator); margin: 0.5rem 0;"></div>
 
                 <a href="?view=demos" class="nav-item <?php echo ($_GET['view'] ?? '') == 'demos' ? 'active' : ''; ?>">
-                    <ion-icon name="headset-outline"></ion-icon> Demos
+                    <ion-icon name="headset-outline"></ion-icon> Send Demos
                 </a>
                 <a href="?view=subscribers"
                     class="nav-item <?php echo ($_GET['view'] ?? '') == 'subscribers' ? 'active' : ''; ?>">

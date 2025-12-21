@@ -16,14 +16,14 @@ $hero_video = !empty($cover['video_url']) ? $cover['video_url'] : 'assets/videos
 $hero_main_text = 'M-House Music is a record label modernizing <span class="highlight">Marathi</span> music in electronic vibes';
 $hero_sub_text = '#marathivaajlachpahije';
 
-// 2. Releases (Latest 4)
+// 2. Releases (Latest 8)
 $sql = "SELECT r.*, GROUP_CONCAT(a.name SEPARATOR ', ') as artist_names 
         FROM releases r 
         LEFT JOIN release_artists ra ON r.id = ra.release_id 
         LEFT JOIN artists a ON ra.artist_id = a.id 
         GROUP BY r.id 
         ORDER BY r.release_date DESC 
-        LIMIT 4";
+        LIMIT 8";
 $releases = $pdo->query($sql)->fetchAll();
 
 // 3. Merch (4)
@@ -172,19 +172,28 @@ $merch = $stmt->fetchAll();
         </section>
 
 
-
-
+        <!-- Subscribe Block -->
+        <section
+            style="margin-top: 6rem; padding: 4rem 2rem; background: #111; text-align: center; border-radius: 8px;">
+            <h2 style="font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom: 1rem;">Join the Movement</h2>
+            <p style="color: var(--secondary-text); margin-bottom: 2rem;">Subscribe for the latest releases, merch
+                drops, and exclusive events.</p>
+            <form action="#" style="max-width: 500px; margin: 0 auto; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <input type="email" placeholder="YOUR@EMAIL.COM" required
+                    style="flex: 1; min-width: 250px; padding: 1rem; background: #000; border: 1px solid #333; color: #fff; outline: none; text-transform: uppercase;">
+                <button type="submit"
+                    style="padding: 1rem 2rem; background: #fff; color: #000; border: none; font-weight: 700; text-transform: uppercase; cursor: pointer;">Subscribe</button>
+            </form>
+        </section>
 
         <!-- 6. Demo Submission -->
-        <!-- 6. Demo Submission -->
-        <section style="margin-top: 6rem; padding: 2rem 0; text-align: center;">
-            <div style="border-top: 1px solid var(--border-color); width: 50px; margin: 0 auto 2rem auto;"></div>
+        <section style="margin-top: 4rem; padding: 1rem 0; text-align: center;">
             <p
-                style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--secondary-text); margin-bottom: 1rem;">
+                style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--secondary-text); margin-bottom: 0.5rem;">
                 Got unreleased music?
             </p>
-            <a href="demos.php" class="btn"
-                style="background: transparent; border: 1px solid var(--border-color); color: var(--text-color); margin-top: 0; padding: 0.8rem 2rem;">
+            <a href="demos.php"
+                style="text-decoration: underline; font-size: 0.8rem; text-transform: uppercase; color: var(--text-color);">
                 Send Demos
             </a>
         </section>

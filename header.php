@@ -16,7 +16,7 @@
 
         <a href="artists.php">Artists</a>
         <a href="social.php">Social</a>
-        <a href="demos.php">Demos</a> <!-- Updated -->
+        <a href="demos.php">Send Demos</a> <!-- Updated -->
         <a href="https://kratex.in" target="_blank">Kratex&trade;</a>
         <a href="about.php">About</a>
     </nav>
@@ -31,12 +31,13 @@
 
 <!-- Mobile Nav Overlay -->
 <div class="mobile-nav">
+    <button class="close-menu-btn">&times;</button>
     <a href="merch.php">Merch</a>
     <a href="releases.php">Music</a>
 
     <a href="artists.php">Artists</a>
     <a href="social.php">Social</a>
-    <a href="demos.php">Demos</a>
+    <a href="demos.php">Send Demos</a>
     <a href="https://kratex.in" target="_blank">Kratex&trade;</a>
     <a href="about.php">About</a>
 </div>
