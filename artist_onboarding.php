@@ -1,5 +1,6 @@
 <?php
 require_once 'backend/db.php';
+require_once 'backend/mailer.php';
 
 $pageTitle = "Artist Onboarding | M-House Music";
 $step = isset($_POST['step']) ? $_POST['step'] : 'form';
@@ -114,6 +115,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $data['bio'],
                 $data['image_url']
             ]);
+
+            // Send Confirmation Email
+            $subject = "Application Received - M-House Music";
+            $message = "
+                <h1>Application Received</h1>
+                <p>Hi " . htmlspecialchars($data['full_name']) . ",</p>
+                <p>Thanks for applying to join the M-House Music collective. We have received your dossier.</p>
+                <p>Our team will review your submission and get back to you shortly.</p>
+                <br>
+                <p>Best,<br>M-House Team</p>
+            ";
+            sendEmail($data['email'], $subject, $message);
 
             $step = 'success';
         } catch (Exception $e) {
