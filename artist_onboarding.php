@@ -28,6 +28,11 @@ function handleUpload($fileInputName, $prefix = '')
 
 // Process Form/Preview
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Check for Post Size Violation (File too large)
+    if (empty($_POST) && isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] > 0) {
+        $errors[] = "The selected files are too large. Please upload smaller files (Max " . (ini_get('upload_max_filesize') ?: '2M') . ").";
+    }
+
     // Collect Data
     $data = [
         'full_name' => $_POST['full_name'] ?? '',
@@ -606,7 +611,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <label>Upload Govt ID / Aadhar Card * (Image/PDF)</label>
-                    <input type="file" name="govt_id" id="govt_id_input" <?php echo empty($data['govt_id_path']) ? 'required' : ''; ?>
+                    <input type="file" name="govt_id" id="govt_id_input" onchange="validateFileSize(this)" <?php echo empty($data['govt_id_path']) ? 'required' : ''; ?>
                         style="border-style: dashed; padding: 2rem; background: #f9f9f9; text-align: center; border: 1px solid #000;">
                     <?php if (!empty($data['govt_id_path'])): ?>
                         <p
@@ -638,7 +643,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="progress-fill" id="progressFill"></div>
                             </div>
                         </div>
-                        <input type="file" name="profile_image" id="profile_input" accept="image/*" style="display: none;">
+                        <input type="file" name="profile_image" id="profile_input" accept="image/*" style="display: none;"
+                            onchange="validateFileSize(this)">
                     </div>
 
                     <label>Artist Bio</label>
@@ -669,6 +675,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <script>
+                function validateFileSize(input) {
+                    const MAX_MB = 15;
+                    if (input.files && input.files[0]) {
+                        if ((input.files[0].size / 1024 / 1024) > MAX_MB) {
+                            alert(`File too large. Maximum allowed size is ${MAX_MB}MB.`);
+                            input.value = ''; // Clear the input
+                        }
+                    }
+                }
+
                 const photoCard = document.getElementById('photoCard');
                 const profileInput = document.getElementById('profile_input');
                 const photoPreview = document.getElementById('photoPreview');
