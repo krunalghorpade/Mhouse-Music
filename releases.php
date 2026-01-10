@@ -30,7 +30,7 @@ $releases = $stmt->fetchAll();
         <h2 class="uppercase" style="margin-bottom: 2rem;">Catalog</h2>
         <div class="grid">
             <?php foreach ($releases as $release): ?>
-                <a href="release.php?id=<?php echo $release['id']; ?>" class="card">
+                <a href="release?id=<?php echo $release['id']; ?>" class="card">
                     <div class="card-image">
                         <img src="<?php echo htmlspecialchars($release['cover_url']); ?>"
                             alt="<?php echo htmlspecialchars($release['title']); ?>">

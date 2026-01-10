@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 
     if ($user && password_verify($password, $user['password_hash'])) {
         $_SESSION['user_id'] = $user['id'];
-        header("Location: index.php"); // Redirect to self (dashboard)
+        header("Location: ./"); // Redirect to self (dashboard)
         exit;
     } else {
         $error = "Invalid credentials";
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 // Handle Logout
 if (isset($_GET['logout'])) {
     session_destroy();
-    header("Location: index.php");
+    header("Location: ./");
     exit;
 }
 
@@ -117,7 +117,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 
                 <div style="flex:1"></div>
 
-                <a href="../index.php" target="_blank" class="nav-item">
+                <a href="../index" target="_blank" class="nav-item">
                     <ion-icon name="home-outline"></ion-icon> Live Site
                 </a>
                 <a href="?logout=1" class="nav-item" style="color: var(--ios-red);">

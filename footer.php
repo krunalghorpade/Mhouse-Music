@@ -21,7 +21,7 @@ if (!isset($footer_artists)) {
 
         <!-- col 1: Brand -->
         <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <a href="index.php">
+            <a href="index">
                 <img src="assets/images/site-logo.svg" alt="M-HOUSE" style="height: 30px; width: auto;">
             </a>
             <div class="copyright" style="font-size: 0.8rem; color: var(--secondary-text);">
@@ -34,13 +34,13 @@ if (!isset($footer_artists)) {
         <div style="display: flex; flex-direction: column; gap: 0.8rem;">
             <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--secondary-text);">Menu</h4>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 2rem;">
-                <a href="releases.php" style="font-size: 0.9rem;">Music</a>
-                <a href="artists.php" style="font-size: 0.9rem;">Artists</a>
+                <a href="releases" style="font-size: 0.9rem;">Music</a>
+                <a href="artists" style="font-size: 0.9rem;">Artists</a>
 
-                <a href="merch.php" style="font-size: 0.9rem;">Merch</a>
-                <a href="demos.php" style="font-size: 0.9rem;">Send Demos</a>
+                <a href="merch" style="font-size: 0.9rem;">Merch</a>
+                <a href="demos" style="font-size: 0.9rem;">Send Demos</a>
 
-                <a href="about.php" style="font-size: 0.9rem;">About</a>
+                <a href="about" style="font-size: 0.9rem;">About</a>
             </div>
         </div>
 
@@ -59,7 +59,7 @@ if (!isset($footer_artists)) {
             <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--secondary-text);">Artists</h4>
             <div style="display: flex; flex-wrap: wrap; gap: 0.8rem 1rem;">
                 <?php foreach ($footer_artists as $f_artist): ?>
-                    <a href="artist.php?id=<?php echo $f_artist['id']; ?>"
+                    <a href="artist?id=<?php echo $f_artist['id']; ?>"
                         style="font-size: 0.85rem; color: var(--secondary-text);"><?php echo htmlspecialchars($f_artist['name']); ?></a>
                 <?php endforeach; ?>
             </div>

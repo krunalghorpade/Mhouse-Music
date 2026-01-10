@@ -840,9 +840,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         Application Sent</h2>
                     <p style="color: #666; margin-bottom: 2.5rem; line-height: 1.6; font-size: 1.1rem; font-weight: 500;">
                         Your artist profile is now under review. We'll send an update to
-                        <strong><?php echo htmlspecialchars($data['email']); ?></strong> once approved.</p>
-                    <a href="index.php" class="ios-btn"
-                        style="text-decoration: none; display: block; width: 100%;">Close</a>
+                        <strong><?php echo htmlspecialchars($data['email']); ?></strong> once approved.
+                    </p>
+                    <a href="index" class="ios-btn" style="text-decoration: none; display: block; width: 100%;">Close</a>
                 </div>
             </div>
         <?php endif; ?>

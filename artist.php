@@ -2,7 +2,7 @@
 require_once 'backend/db.php';
 
 if (!isset($_GET['id'])) {
-    header("Location: artists.php");
+    header("Location: artists");
     exit;
 }
 
@@ -12,7 +12,7 @@ $stmt->execute([$id]);
 $artist = $stmt->fetch();
 
 if (!$artist) {
-    header("Location: artists.php");
+    header("Location: artists");
     exit;
 }
 
@@ -92,14 +92,14 @@ $releases = $stmt->fetchAll();
                     <?php foreach ($releases as $release): ?>
                         <div class="card">
                             <div class="card-image">
-                                <a href="release.php?id=<?php echo $release['id']; ?>">
+                                <a href="release?id=<?php echo $release['id']; ?>">
                                     <img src="<?php echo htmlspecialchars($release['cover_url']); ?>">
                                 </a>
                             </div>
                             <div class="card-info">
                                 <div class="card-title">
                                     <a
-                                        href="release.php?id=<?php echo $release['id']; ?>"><?php echo htmlspecialchars($release['title']); ?></a>
+                                        href="release?id=<?php echo $release['id']; ?>"><?php echo htmlspecialchars($release['title']); ?></a>
                                 </div>
                                 <div class="card-meta">
                                     <?php echo date('Y', strtotime($release['release_date'])); ?>

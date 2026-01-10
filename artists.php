@@ -26,7 +26,7 @@ $artists = $stmt->fetchAll();
 
         <div class="artist-list">
             <?php foreach ($artists as $artist): ?>
-                <a href="artist.php?id=<?php echo $artist['id']; ?>" class="artist-list-item">
+                <a href="artist?id=<?php echo $artist['id']; ?>" class="artist-list-item">
                     <img src="<?php echo htmlspecialchars($artist['image_url']); ?>"
                         alt="<?php echo htmlspecialchars($artist['name']); ?>" class="artist-list-image">
                     <span class="artist-list-name"><?php echo htmlspecialchars($artist['name']); ?></span>

@@ -127,11 +127,11 @@ $merch = $stmt->fetchAll();
         <section>
             <div class="section-header">
                 <h2>Releases</h2>
-                <a href="releases.php" class="view-all">View All →</a>
+                <a href="releases" class="view-all">View All →</a>
             </div>
             <div class="grid">
                 <?php foreach ($releases as $release): ?>
-                    <a href="release.php?id=<?php echo $release['id']; ?>" class="card">
+                    <a href="release?id=<?php echo $release['id']; ?>" class="card">
                         <div class="card-image">
                             <img src="<?php echo htmlspecialchars($release['cover_url']); ?>">
                         </div>
@@ -150,7 +150,7 @@ $merch = $stmt->fetchAll();
         <section>
             <div class="section-header">
                 <h2>Merch</h2>
-                <a href="merch.php" class="view-all">Shop All →</a>
+                <a href="merch" class="view-all">Shop All →</a>
             </div>
             <div class="grid">
                 <?php foreach ($merch as $item): ?>
@@ -192,7 +192,7 @@ $merch = $stmt->fetchAll();
                 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--secondary-text); margin-bottom: 0.5rem;">
                 Got unreleased music?
             </p>
-            <a href="demos.php"
+            <a href="demos"
                 style="text-decoration: underline; font-size: 0.8rem; text-transform: uppercase; color: var(--text-color);">
                 Send Demos
             </a>

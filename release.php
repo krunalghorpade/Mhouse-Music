@@ -2,7 +2,7 @@
 require_once 'backend/db.php';
 
 if (!isset($_GET['id'])) {
-    header("Location: releases.php");
+    header("Location: releases");
     exit;
 }
 
@@ -14,7 +14,7 @@ $stmt->execute([$id]);
 $release = $stmt->fetch();
 
 if (!$release) {
-    header("Location: releases.php");
+    header("Location: releases");
     exit;
 }
 
@@ -63,7 +63,7 @@ $links = json_decode($release['platform_links'], true) ?? [];
                     <?php
                     $artistLinks = [];
                     foreach ($artists as $artist) {
-                        $artistLinks[] = '<a href="artists.php?id=' . $artist['id'] . '" class="hover-underline">' . htmlspecialchars($artist['name']) . '</a>';
+                        $artistLinks[] = '<a href="artists?id=' . $artist['id'] . '" class="hover-underline">' . htmlspecialchars($artist['name']) . '</a>';
                     }
                     echo implode(', ', $artistLinks);
                     ?>
