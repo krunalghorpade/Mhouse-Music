@@ -820,8 +820,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <form method="POST" class="dossier-actions">
                         <?php foreach ($data as $k => $v): ?>
-                            <input type="hidden" name="<?php echo $k; ?>" value="<?php echo htmlspecialchars($v); ?>">
+                            <?php if (!is_array($v)): ?>
+                                <input type="hidden" name="<?php echo $k; ?>" value="<?php echo htmlspecialchars($v); ?>">
+                            <?php endif; ?>
                         <?php endforeach; ?>
+                        <!-- Explicitly pass current file paths -->
+                        <input type="hidden" name="govt_id_current"
+                            value="<?php echo htmlspecialchars($data['govt_id_path']); ?>">
+                        <input type="hidden" name="image_url_current"
+                            value="<?php echo htmlspecialchars($data['image_url']); ?>">
 
                         <button type="submit" name="step" value="form" class="ios-btn-outline"
                             style="flex: 1; height: 65px; border-width: 2px;">REVISE APPLICATION</button>
