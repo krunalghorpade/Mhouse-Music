@@ -98,14 +98,15 @@ if ($detailId) {
             <?php foreach ($submissions as $sub): ?>
                 <div class="ios-list-item">
                     <div style="display: flex; align-items: center; gap: 1rem;">
-                        <img src="../<?php echo $sub['image_url'] ?: 'assets/img/placeholder.png'; ?>"
-                            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                        <img src="<?php echo !empty($sub['image_url']) ? (strpos($sub['image_url'], 'assets/') === 0 ? '/' : '') . $sub['image_url'] : '/assets/images/icon.png'; ?>"
+                            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 1px solid var(--ios-separator);">
                         <div>
-                            <div style="font-weight: 600; font-size: 1.1rem;">
-                                <?php echo htmlspecialchars($sub['full_name']); ?>
+                            <div style="font-weight: 700; font-size: 1.1rem; color: var(--ios-text);">
+                                <?php echo htmlspecialchars($sub['stage_name'] ?: $sub['full_name']); ?>
                             </div>
-                            <div style="font-size: 0.9rem; color: var(--ios-secondary);">
-                                <?php echo htmlspecialchars($sub['stage_name'] ? $sub['stage_name'] : '(No Stage Name)'); ?>
+                            <div
+                                style="font-size: 0.85rem; color: var(--ios-secondary); text-transform: uppercase; letter-spacing: 0.5px;">
+                                <?php echo htmlspecialchars($sub['full_name']); ?>
                                 •
                                 <?php echo date('M d, Y', strtotime($sub['created_at'])); ?>
                             </div>
@@ -135,10 +136,16 @@ if ($detailId) {
         <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
 
             <div style="flex: 1; min-width: 300px;">
-                <h2 style="margin-top: 0;">Profile</h2>
-                <div style="text-align: center; margin-bottom: 1rem;">
-                    <img src="../<?php echo $detailSubmission['image_url']; ?>"
-                        style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover; background: #333;">
+                <div style="text-align: center; margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 2rem;">
+                    <img src="<?php echo !empty($detailSubmission['image_url']) ? (strpos($detailSubmission['image_url'], 'assets/') === 0 ? '/' : '') . $detailSubmission['image_url'] : '/assets/images/icon.png'; ?>"
+                        style="width: 200px; height: 200px; border-radius: 15px; object-fit: cover; background: #f0f0f0; border: 2px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <h2 style="margin: 1rem 0 0.5rem; font-size: 2rem;">
+                        <?php echo htmlspecialchars($detailSubmission['stage_name'] ?: 'No Stage Name'); ?>
+                    </h2>
+                    <p
+                        style="color: var(--ios-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">
+                        <?php echo htmlspecialchars($detailSubmission['full_name']); ?>
+                    </p>
                 </div>
 
                 <div class="detail-row"><strong>Full Name:</strong>
@@ -190,17 +197,23 @@ if ($detailId) {
                 </div>
 
                 <h3 style="margin-top: 1rem;">Government ID Document</h3>
-                <div style="margin-bottom: 2rem;">
+                <div
+                    style="margin-bottom: 2rem; background: #f9f9f9; padding: 1.5rem; border-radius: 12px; border: 1px solid #eee;">
                     <?php
                     $ext = pathinfo($detailSubmission['govt_id_path'], PATHINFO_EXTENSION);
                     if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif'])):
                         ?>
-                        <img src="../<?php echo $detailSubmission['govt_id_path']; ?>"
-                            style="max-width: 100%; border-radius: 8px; border: 1px solid #333;">
+                        <img src="<?php echo (strpos($detailSubmission['govt_id_path'], 'assets/') === 0 ? '/' : '') . $detailSubmission['govt_id_path']; ?>"
+                            style="max-width: 100%; border-radius: 8px; border: 1px solid #ccc; cursor: pointer; display: block;"
+                            onclick="window.open(this.src)">
+                        <p style="font-size: 0.75rem; color: #888; margin-top: 10px; text-align: center;">Click image to enlarge
+                        </p>
                     <?php else: ?>
-                        <a href="../<?php echo $detailSubmission['govt_id_path']; ?>" target="_blank" class="ios-btn-outline">
-                            <ion-icon name="document-text-outline"></ion-icon> View Document (
-                            <?php echo strtoupper($ext); ?>)
+                        <a href="<?php echo (strpos($detailSubmission['govt_id_path'], 'assets/') === 0 ? '/' : '') . $detailSubmission['govt_id_path']; ?>"
+                            target="_blank" class="ios-btn-outline"
+                            style="width: 100%; text-align: center; padding: 2rem; display: flex; flex-direction: column; gap: 10px; align-items: center; border-style: dashed;">
+                            <ion-icon name="document-text-outline" style="font-size: 3rem;"></ion-icon>
+                            <span>Open Document (<?php echo strtoupper($ext); ?>)</span>
                         </a>
                     <?php endif; ?>
                 </div>
