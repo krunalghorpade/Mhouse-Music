@@ -92,10 +92,24 @@ $socials = $editArtist ? json_decode($editArtist['social_links'], true) : [];
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
     <h1>Manage Artists</h1>
-    <button class="ios-btn" onclick="document.getElementById('artist-form').scrollIntoView({behavior: 'smooth'})">
-        <ion-icon name="add-outline" style="vertical-align: middle;"></ion-icon> Add New
-    </button>
+    <div>
+        <button class="ios-btn-outline" onclick="copyOnboardingLink()" style="margin-right: 1rem;">
+            <ion-icon name="link-outline" style="vertical-align: middle;"></ion-icon> Copy Onboarding Link
+        </button>
+        <button class="ios-btn" onclick="document.getElementById('artist-form').scrollIntoView({behavior: 'smooth'})">
+            <ion-icon name="add-outline" style="vertical-align: middle;"></ion-icon> Add New
+        </button>
+    </div>
 </div>
+
+<script>
+    function copyOnboardingLink() {
+        const link = window.location.origin + '/artist_onboarding.php';
+        navigator.clipboard.writeText(link).then(() => {
+            alert('Link copied to clipboard: ' + link);
+        });
+    }
+</script>
 
 <!-- List -->
 <div class="ios-list" style="margin-bottom: 3rem;">

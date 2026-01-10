@@ -116,6 +116,23 @@ try {
             button_link VARCHAR(255),
             image_url VARCHAR(255),
             video_url VARCHAR(255)
+        )",
+        "CREATE TABLE IF NOT EXISTS artist_submissions (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            full_name VARCHAR(255) NOT NULL,
+            stage_name VARCHAR(255),
+            email VARCHAR(150) NOT NULL,
+            phone VARCHAR(50) NOT NULL,
+            country VARCHAR(100) NOT NULL,
+            address TEXT NOT NULL,
+            pan_number VARCHAR(50),
+            govt_id_number VARCHAR(100),
+            govt_id_path VARCHAR(255) NOT NULL,
+            social_links TEXT, -- JSON string
+            bio TEXT,
+            image_url VARCHAR(255),
+            status VARCHAR(50) DEFAULT 'pending', -- pending, approved, rejected
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )"
     ];
 

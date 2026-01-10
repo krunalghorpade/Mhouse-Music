@@ -90,6 +90,10 @@ $isLoggedIn = isset($_SESSION['user_id']);
                 <a href="?view=artists" class="nav-item <?php echo ($_GET['view'] ?? '') == 'artists' ? 'active' : ''; ?>">
                     <ion-icon name="people-outline"></ion-icon> Artists
                 </a>
+                <a href="?view=onboarding"
+                    class="nav-item <?php echo ($_GET['view'] ?? '') == 'onboarding' ? 'active' : ''; ?>">
+                    <ion-icon name="person-add-outline"></ion-icon> Onboarding
+                </a>
                 <a href="?view=releases"
                     class="nav-item <?php echo ($_GET['view'] ?? '') == 'releases' ? 'active' : ''; ?>">
                     <ion-icon name="musical-notes-outline"></ion-icon> Releases
@@ -240,6 +244,8 @@ $isLoggedIn = isset($_SESSION['user_id']);
                     <?php
                 } elseif ($view === 'artists') {
                     include 'artists_view.php';
+                } elseif ($view === 'onboarding') {
+                    include 'onboarding_view.php';
                 } elseif ($view === 'releases') {
                     include 'releases_view.php';
                 } elseif ($view === 'merch') {
