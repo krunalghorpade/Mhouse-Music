@@ -86,10 +86,10 @@ usort($releases, function ($a, $b) {
                     <?php foreach ($rel['files'] as $file): ?>
                         <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f5f5f5;">
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                <?php if (strpos($file['name'], '.doc') !== false): ?>
-                                    <ion-icon name="document-text" style="color: #2196f3; font-size: 1.2rem;"></ion-icon>
+                                <?php if (strpos($file['name'], '.pdf') !== false): ?>
+                                    <ion-icon name="document-text" style="color: #f44336; font-size: 1.2rem;"></ion-icon>
                                 <?php else: ?>
-                                    <ion-icon name="print" style="color: #4caf50; font-size: 1.2rem;"></ion-icon>
+                                    <ion-icon name="document-outline" style="color: #2196f3; font-size: 1.2rem;"></ion-icon>
                                 <?php endif; ?>
                                 <span><?php echo htmlspecialchars($file['name']); ?></span>
                             </div>
@@ -105,76 +105,39 @@ usort($releases, function ($a, $b) {
 
 <!-- New Contract Modal -->
 <div id="newContractModal" class="modal-overlay" style="display: none;">
-    <div class="modal-card" style="width: 100%; max-width: 600px; text-align: left;">
-        <h2 style="margin-top: 0; margin-bottom: 1.5rem;">Generate New Contract</h2>
-
+    <div class="modal-card" style="width: 100%; max-width: 800px; text-align: left; max-height: 90vh; overflow-y: auto;">
+        <h2 style="margin-top: 0; margin-bottom: 1.5rem;">Generate Contracts (Release)</h2>
         <form id="contractForm">
-            <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; font-weight: 700; margin-bottom: 10px; font-size: 1.1rem;">Track Details</label>
-                
-                <div style="margin-bottom: 10px;">
-                    <label style="font-size: 0.85rem; color: #666; font-weight: 600;">Track Name</label>
-                    <input type="text" name="track_name" placeholder="E.g. Summer Vibes" required 
-                           style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;">
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <!-- Release Details -->
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
+                <h3 style="margin-top:0; font-size:1.1rem; border-bottom:1px solid #ddd; padding-bottom:10px;">Release Details</h3>
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
                     <div>
-                        <label style="font-size: 0.85rem; color: #666; font-weight: 600;">Type</label>
-                        <select name="track_type" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; background: white; margin-top: 5px;">
-                            <option value="Original">Original</option>
-                            <option value="Remix">Remix</option>
-                            <option value="Cover">Cover</option>
-                            <option value="Bootleg">Bootleg</option>
-                        </select>
+                        <label style="font-size: 0.85rem; color: #666; font-weight: 600;">Release Name</label>
+                        <input type="text" id="release_name" placeholder="E.g. Summer Dreams EP" required 
+                               style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;">
                     </div>
                     <div>
-                        <label style="font-size: 0.85rem; color: #666; font-weight: 600;">Version</label>
-                        <select name="track_version" required style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; background: white; margin-top: 5px;">
-                            <option value="Original Mix">Original Mix</option>
-                            <option value="Radio Edit">Radio Edit</option>
-                            <option value="Extended Mix">Extended Mix</option>
-                            <option value="Instrumental">Instrumental</option>
-                            <option value="Acapella">Acapella</option>
+                        <label style="font-size: 0.85rem; color: #666; font-weight: 600;">Release Type</label>
+                        <select id="release_type" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: white; margin-top: 5px;">
+                            <option value="Single">Single</option>
+                            <option value="Album">Album</option>
+                            <option value="EP">EP</option>
+                            <option value="Compilation">Compilation</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; font-weight: 700; margin-bottom: 5px; font-size: 1.1rem;">Select Artists</label>
-                <select id="artistSelect" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; background: white;">
-                    <option value="">-- Add Artist --</option>
-                    <?php foreach ($artists as $a): ?>
-                        <option value="<?php echo $a['id']; ?>">
-                            <?php echo htmlspecialchars($a['name']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+            <!-- Tracks Container -->
+            <div id="tracksContainer"></div>
 
-            <div id="selectedArtistsList"
-                style="margin-bottom: 1.5rem; border: 1px solid #eee; padding: 10px; max-height: 200px; overflow-y: auto; background: #f9f9f9; border-radius: 5px;">
-                <!-- Selected artists will appear here -->
-                <p style="color: #999; text-align: center; font-size: 0.9rem;" id="noArtistMsg">No artists selected</p>
-            </div>
+            <button type="button" onclick="addTrack()" class="ios-btn-text" style="margin-bottom: 20px; font-weight:bold;">
+                <ion-icon name="add-circle-outline"></ion-icon> Add Track
+            </button>
 
-            <div style="background: #e8f5e9; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; font-weight: 700;">
-                    <span>Label Share:</span>
-                    <span>50% (Mech) / 70% (Pub)</span>
-                </div>
-                <div
-                    style="display: flex; justify-content: space-between; font-weight: 700; color: #4caf50; margin-top: 5px;">
-                    <span>Artist Share (Total):</span>
-                    <span>50% (Mech) / 30% (Pub)</span>
-                </div>
-                <div style="margin-top: 5px; font-size: 0.9rem; color: #666;">
-                    Split per artist: <span id="splitPerArtist">0%</span>
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 10px;">
+            <!-- Actions -->
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button type="button" onclick="document.getElementById('newContractModal').style.display='none'"
                     class="ios-btn" style="background: #ccc; flex: 1;">Cancel</button>
                 <button type="submit" class="ios-btn" style="flex: 1;">Generate Contracts</button>
@@ -184,11 +147,157 @@ usort($releases, function ($a, $b) {
 </div>
 
 <script>
-    const selectedArtists = new Map();
-    const artistSelect = document.getElementById('artistSelect');
-    const selectedArtistsList = document.getElementById('selectedArtistsList');
-    const noArtistMsg = document.getElementById('noArtistMsg');
-    const splitPerArtist = document.getElementById('splitPerArtist');
+    // State management
+    const allArtists = <?php echo json_encode($artists); ?>;
+    let tracksState = [];
+    
+    function generateArtistOptions() {
+        let opts = `<option value="">-- Add Artist --</option>`;
+        allArtists.forEach(a => {
+            opts += `<option value="${a.id}">${a.name}</option>`;
+        });
+        return opts;
+    }
+
+    function addTrack() {
+        tracksState.push({
+            name: '',
+            type: 'Original',
+            version: 'Original Mix',
+            artists: [
+                { id: '', roles: ['Vocalist'], isMain: true }
+            ]
+        });
+        renderTracks();
+    }
+
+    function removeTrack(tIndex) {
+        tracksState.splice(tIndex, 1);
+        renderTracks();
+    }
+
+    function addArtist(tIndex) {
+        tracksState[tIndex].artists.push({ id: '', roles: ['Vocalist'], isMain: false });
+        renderTracks();
+    }
+
+    function removeArtist(tIndex, aIndex) {
+        tracksState[tIndex].artists.splice(aIndex, 1);
+        renderTracks();
+    }
+
+    function updateTrack(tIndex, field, value) {
+        tracksState[tIndex][field] = value;
+    }
+
+    function updateArtist(tIndex, aIndex, field, value) {
+        tracksState[tIndex].artists[aIndex][field] = value;
+    }
+
+    function updateArtistRoles(tIndex, aIndex, options) {
+        const roles = Array.from(options).filter(opt => opt.selected).map(opt => opt.value);
+        tracksState[tIndex].artists[aIndex].roles = roles;
+    }
+
+    function updateArtistMain(tIndex, aIndex, checked) {
+        tracksState[tIndex].artists[aIndex].isMain = checked;
+    }
+
+    function renderTracks() {
+        const container = document.getElementById('tracksContainer');
+        container.innerHTML = '';
+
+        tracksState.forEach((track, tIndex) => {
+            let artistsHtml = '';
+            
+            track.artists.forEach((artist, aIndex) => {
+                const roles = ['Music Producer', 'Vocalist', 'Writer', 'Composer', 'Musician'];
+                let roleOptions = '';
+                roles.forEach(r => {
+                    const sel = artist.roles.includes(r) ? 'selected' : '';
+                    roleOptions += `<option value="${r}" ${sel}>${r}</option>`;
+                });
+
+                artistsHtml += `
+                    <div style="background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; position:relative;">
+                        <button type="button" onclick="removeArtist(${tIndex}, ${aIndex})" style="position:absolute; top:10px; right:10px; color:red; border:none; background:none; cursor:pointer;" title="Remove Artist"><ion-icon name="trash"></ion-icon></button>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="font-size: 0.75rem; color: #666;">Artist</label>
+                                <select onchange="updateArtist(${tIndex}, ${aIndex}, 'id', this.value)" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                    ${generateArtistOptions()}
+                                </select>
+                                <script>
+                                    // Hack to set value dynamically
+                                    document.currentScript.previousElementSibling.value = "${artist.id}";
+                                <\/script>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: #666;">Roles (Hold Ctrl/Cmd)</label>
+                                <select multiple required onchange="updateArtistRoles(${tIndex}, ${aIndex}, this.options)" style="width: 100%; height: 60px; padding: 4px; border: 1px solid #ccc;">
+                                    ${roleOptions}
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin-top: 5px;">
+                            <label style="font-size: 0.8rem; display:flex; align-items:center; gap:5px;">
+                                <input type="checkbox" onchange="updateArtistMain(${tIndex}, ${aIndex}, this.checked)" ${artist.isMain ? 'checked' : ''}> Set as Main Artist
+                            </label>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Avoid division by zero
+            let artistSplit = track.artists.length > 0 ? (50/track.artists.length).toFixed(2) : 0;
+
+            const html = `
+                <div style="background: #fdfdfd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e0e0e0; position:relative;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:15px;">
+                        <h4 style="margin:0; color:#333;">Track ${tIndex + 1}</h4>
+                        <button type="button" onclick="removeTrack(${tIndex})" style="color:red; background:none; border:none; cursor:pointer; font-size:0.9rem;" class="ios-btn-text"><ion-icon name="close-circle-outline"></ion-icon> Remove Track</button>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; margin-bottom:15px;">
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666; font-weight: 600;">Track Name</label>
+                            <input type="text" value="${track.name}" oninput="updateTrack(${tIndex}, 'name', this.value)" placeholder="E.g. Summer Vibes" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666; font-weight: 600;">Type</label>
+                            <select onchange="updateTrack(${tIndex}, 'type', this.value)" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;">
+                                <option value="Original" ${track.type === 'Original' ? 'selected' : ''}>Original</option>
+                                <option value="Remix" ${track.type === 'Remix' ? 'selected' : ''}>Remix</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666; font-weight: 600;">Version</label>
+                            <select onchange="updateTrack(${tIndex}, 'version', this.value)" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;">
+                                <option value="Original Mix" ${track.version === 'Original Mix' ? 'selected' : ''}>Original Mix</option>
+                                <option value="Radio Edit" ${track.version === 'Radio Edit' ? 'selected' : ''}>Radio Edit</option>
+                                <option value="Extended Mix" ${track.version === 'Extended Mix' ? 'selected' : ''}>Extended Mix</option>
+                                <option value="Instrumental" ${track.version === 'Instrumental' ? 'selected' : ''}>Instrumental</option>
+                                <option value="Acapella" ${track.version === 'Acapella' ? 'selected' : ''}>Acapella</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h5 style="margin:0 0 10px 0; color:#444;">Artists on this track</h5>
+                    ${artistsHtml}
+                    <button type="button" onclick="addArtist(${tIndex})" class="ios-btn-text" style="font-size:0.9rem; margin-top:5px;"><ion-icon name="person-add-outline"></ion-icon> Add Artist to Track</button>
+                    
+                    <div style="background: #e8f5e9; padding: 10px; border-radius: 5px; margin-top: 15px; font-size:0.85rem; color: #2e7d32;">
+                        <strong>Split Logic:</strong> Label 50% / Artists 50% (each artist receives ${artistSplit}%)
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+    }
+
+    // Initialize with 1 track
+    addTrack();
 
     // Folder Toggle Logic
     function toggleFolder(header) {
@@ -205,122 +314,41 @@ usort($releases, function ($a, $b) {
         }
     }
 
-    // Add Artist Logic
-    artistSelect.addEventListener('change', (e) => {
-        const id = e.target.value;
-        const name = e.target.options[e.target.selectedIndex].text;
-
-        if (id && !selectedArtists.has(id)) {
-            addArtist(id, name);
-            e.target.value = ""; // Reset select
-        }
-    });
-
-    function addArtist(id, name) {
-        selectedArtists.set(id, { name: name, roles: [] });
-        renderArtists();
-        updateSplits();
-    }
-
-    function removeArtist(id) {
-        selectedArtists.delete(id);
-        renderArtists();
-        updateSplits();
-    }
-
-    function updateArtistRoles(id, options) {
-        const roles = Array.from(options).filter(opt => opt.selected).map(opt => opt.value);
-        const artist = selectedArtists.get(id);
-        artist.roles = roles;
-        selectedArtists.set(id, artist);
-    }
-
-    function renderArtists() {
-        if (selectedArtists.size === 0) {
-            selectedArtistsList.innerHTML = '';
-            selectedArtistsList.appendChild(noArtistMsg);
-            noArtistMsg.style.display = 'block';
-            return;
-        }
-
-        selectedArtistsList.innerHTML = '';
-        noArtistMsg.style.display = 'none';
-
-        selectedArtists.forEach((data, id) => {
-            const item = document.createElement('div');
-            item.style.background = '#fff';
-            item.style.padding = '10px';
-            item.style.marginBottom = '10px';
-            item.style.border = '1px solid #ddd';
-            item.style.borderRadius = '5px';
-
-            const rolesHtml = `
-                <select multiple onchange="updateArtistRoles('${id}', this.options)" style="width: 100%; margin-top: 5px; height: 80px; padding: 5px; border: 1px solid #ccc;">
-                    <option value="Singer">Singer</option>
-                    <option value="Lyricist">Lyricist</option>
-                    <option value="Producer">Producer</option>
-                    <option value="Performer">Performer</option>
-                </select>
-                <div style="font-size: 0.75rem; color: #999; margin-top: 2px;">Hold Ctrl/Cmd to select multiple roles</div>
-            `;
-
-            item.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <strong>${data.name}</strong>
-                    <button type="button" onclick="removeArtist('${id}')" style="background: none; border: none; color: red; cursor: pointer; font-size: 1.2rem;">&times;</button>
-                </div>
-                ${rolesHtml}
-            `;
-            selectedArtistsList.appendChild(item);
-        });
-    }
-
-    function updateSplits() {
-        const count = selectedArtists.size;
-        if (count > 0) {
-            const mechSplit = (50 / count).toFixed(2);
-            const pubSplit = (30 / count).toFixed(2);
-            splitPerArtist.innerText = `${mechSplit}% (Mech) / ${pubSplit}% (Pub)`;
-        } else {
-            splitPerArtist.innerText = "0%";
-        }
-    }
-
-    // Handle Form Submit
+    // Submit Logic
     document.getElementById('contractForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        if (selectedArtists.size === 0) {
-            alert("Please select at least one artist.");
+        
+        // Validate
+        if(tracksState.length === 0) {
+            alert("Please add at least one track.");
             return;
         }
 
-        const formData = new FormData(e.target);
-
-        // Append Artists Data
-        selectedArtists.forEach((data, id) => {
-            if (data.roles.length === 0) {
-                // Default if no role selected? Or force select?
-                // Let's assume 'Artist' if nothing selected, or handle in backend.
-            }
-            data.roles.forEach(role => {
-                formData.append(`artists[${id}][roles][]`, role);
-            });
-            // If no roles, ensure ID catches
-            if (data.roles.length === 0) {
-                formData.append(`artists[${id}][roles][]`, 'Artist');
+        let isValid = true;
+        tracksState.forEach(t => {
+            if(t.artists.length === 0) {
+                alert("Each track must have at least one artist.");
+                isValid = false;
             }
         });
+        if(!isValid) return;
+
+        const payload = {
+            release_name: document.getElementById('release_name').value,
+            release_type: document.getElementById('release_type').value,
+            tracks: tracksState
+        };
 
         const submitBtn = e.target.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerText;
-        submitBtn.innerText = "Generating...";
+        submitBtn.innerText = "Generating Contracts...";
         submitBtn.disabled = true;
 
         try {
             const response = await fetch('../backend/generate_contract.php', {
                 method: 'POST',
-                body: formData
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
 
             const result = await response.json();
@@ -339,9 +367,4 @@ usort($releases, function ($a, $b) {
             submitBtn.disabled = false;
         }
     });
-
-    // Make functions global for inline onclick
-    window.removeArtist = removeArtist;
-    window.updateArtistRoles = updateArtistRoles;
-    window.toggleFolder = toggleFolder;
 </script>
