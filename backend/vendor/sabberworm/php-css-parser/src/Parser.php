@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Sabberworm\CSS;
 
 use Sabberworm\CSS\CSSList\Document;
@@ -16,27 +14,53 @@ class Parser
     /**
      * @var ParserState
      */
-    private $parserState;
+    private $oParserState;
 
     /**
-     * @param string $text the complete CSS as text (i.e., usually the contents of a CSS file)
-     * @param int<1, max> $lineNumber the line number (starting from 1, not from 0)
+     * @param string $sText the complete CSS as text (i.e., usually the contents of a CSS file)
+     * @param Settings|null $oParserSettings
+     * @param int $iLineNo the line number (starting from 1, not from 0)
      */
-    public function __construct(string $text, ?Settings $parserSettings = null, int $lineNumber = 1)
+    public function __construct($sText, Settings $oParserSettings = null, $iLineNo = 1)
     {
-        if ($parserSettings === null) {
-            $parserSettings = Settings::create();
+        if ($oParserSettings === null) {
+            $oParserSettings = Settings::create();
         }
-        $this->parserState = new ParserState($text, $parserSettings, $lineNumber);
+        $this->oParserState = new ParserState($sText, $oParserSettings, $iLineNo);
+    }
+
+    /**
+     * Sets the charset to be used if the CSS does not contain an `@charset` declaration.
+     *
+     * @param string $sCharset
+     *
+     * @return void
+     */
+    public function setCharset($sCharset)
+    {
+        $this->oParserState->setCharset($sCharset);
+    }
+
+    /**
+     * Returns the charset that is used if the CSS does not contain an `@charset` declaration.
+     *
+     * @return void
+     */
+    public function getCharset()
+    {
+        // Note: The `return` statement is missing here. This is a bug that needs to be fixed.
+        $this->oParserState->getCharset();
     }
 
     /**
      * Parses the CSS provided to the constructor and creates a `Document` from it.
      *
+     * @return Document
+     *
      * @throws SourceException
      */
-    public function parse(): Document
+    public function parse()
     {
-        return Document::parse($this->parserState);
+        return Document::parse($this->oParserState);
     }
 }

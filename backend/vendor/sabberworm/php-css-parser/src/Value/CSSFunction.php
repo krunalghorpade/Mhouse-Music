@@ -1,14 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Sabberworm\CSS\Value;
 
 use Sabberworm\CSS\OutputFormat;
 use Sabberworm\CSS\Parsing\ParserState;
-use Sabberworm\CSS\Parsing\SourceException;
-use Sabberworm\CSS\Parsing\UnexpectedEOFException;
-use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 
 /**
  * A `CSSFunction` represents a special kind of value that also contains a function name and where the values are the
@@ -17,116 +12,87 @@ use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 class CSSFunction extends ValueList
 {
     /**
-     * @var non-empty-string
-     *
-     * @internal since 8.8.0
+     * @var string
      */
-    protected $name;
+    protected $sName;
 
     /**
-     * @param non-empty-string $name
-     * @param RuleValueList|array<Value|string> $arguments
-     * @param non-empty-string $separator
-     * @param int<1, max>|null $lineNumber
+     * @param string $sName
+     * @param RuleValueList|array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string> $aArguments
+     * @param string $sSeparator
+     * @param int $iLineNo
      */
-    public function __construct(string $name, $arguments, string $separator = ',', ?int $lineNumber = null)
+    public function __construct($sName, $aArguments, $sSeparator = ',', $iLineNo = 0)
     {
-        if ($arguments instanceof RuleValueList) {
-            $separator = $arguments->getListSeparator();
-            $arguments = $arguments->getListComponents();
+        if ($aArguments instanceof RuleValueList) {
+            $sSeparator = $aArguments->getListSeparator();
+            $aArguments = $aArguments->getListComponents();
         }
-        $this->name = $name;
-        $this->setPosition($lineNumber); // TODO: redundant?
-        parent::__construct($arguments, $separator, $lineNumber);
+        $this->sName = $sName;
+        $this->iLineNo = $iLineNo;
+        parent::__construct($aArguments, $sSeparator, $iLineNo);
     }
 
     /**
-     * @throws SourceException
-     * @throws UnexpectedEOFException
-     * @throws UnexpectedTokenException
+     * @param ParserState $oParserState
+     * @param bool $bIgnoreCase
      *
-     * @internal since V8.8.0
-     */
-    public static function parse(ParserState $parserState, bool $ignoreCase = false): CSSFunction
-    {
-        $name = self::parseName($parserState, $ignoreCase);
-        $parserState->consume('(');
-        $arguments = self::parseArguments($parserState);
-
-        $result = new CSSFunction($name, $arguments, ',', $parserState->currentLine());
-        $parserState->consume(')');
-
-        return $result;
-    }
-
-    /**
-     * @throws SourceException
-     * @throws UnexpectedEOFException
-     * @throws UnexpectedTokenException
-     */
-    private static function parseName(ParserState $parserState, bool $ignoreCase = false): string
-    {
-        return $parserState->parseIdentifier($ignoreCase);
-    }
-
-    /**
-     * @return Value|string
+     * @return CSSFunction
      *
      * @throws SourceException
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    private static function parseArguments(ParserState $parserState)
+    public static function parse(ParserState $oParserState, $bIgnoreCase = false)
     {
-        return Value::parseValue($parserState, ['=', ' ', ',']);
+        $mResult = $oParserState->parseIdentifier($bIgnoreCase);
+        $oParserState->consume('(');
+        $aArguments = Value::parseValue($oParserState, ['=', ' ', ',']);
+        $mResult = new CSSFunction($mResult, $aArguments, ',', $oParserState->currentLine());
+        $oParserState->consume(')');
+        return $mResult;
     }
 
     /**
-     * @return non-empty-string
+     * @return string
      */
-    public function getName(): string
+    public function getName()
     {
-        return $this->name;
+        return $this->sName;
     }
 
     /**
-     * @param non-empty-string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return array<Value|string>
-     */
-    public function getArguments(): array
-    {
-        return $this->components;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function render(OutputFormat $outputFormat): string
-    {
-        $arguments = parent::render($outputFormat);
-        return "{$this->name}({$arguments})";
-    }
-
-    /**
-     * @return array<string, bool|int|float|string|array<mixed>|null>
+     * @param string $sName
      *
-     * @internal
+     * @return void
      */
-    public function getArrayRepresentation(): array
+    public function setName($sName)
     {
-        return \array_merge(
-            [
-                'class' => 'placeholder',
-                'name' => $this->name,
-            ],
-            parent::getArrayRepresentation()
-        );
+        $this->sName = $sName;
+    }
+
+    /**
+     * @return array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string>
+     */
+    public function getArguments()
+    {
+        return $this->aComponents;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->render(new OutputFormat());
+    }
+
+    /**
+     * @return string
+     */
+    public function render(OutputFormat $oOutputFormat)
+    {
+        $aArguments = parent::render($oOutputFormat);
+        return "{$this->sName}({$aArguments})";
     }
 }
