@@ -1,4 +1,5 @@
 <?php
+if (function_exists('opcache_reset')) { opcache_reset(); }
 // backend/generate_contract.php
 require_once 'db.php';
 require_once __DIR__ . '/vendor/autoload.php';
