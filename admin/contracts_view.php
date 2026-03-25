@@ -151,10 +151,11 @@ usort($releases, function ($a, $b) {
     const allArtists = <?php echo json_encode($artists); ?>;
     let tracksState = [];
     
-    function generateArtistOptions() {
+    function generateArtistOptions(selectedId) {
         let opts = `<option value="">-- Add Artist --</option>`;
         allArtists.forEach(a => {
-            opts += `<option value="${a.id}">${a.name}</option>`;
+            const sel = (a.id == selectedId) ? 'selected' : '';
+            opts += `<option value="${a.id}" ${sel}>${a.name}</option>`;
         });
         return opts;
     }
@@ -226,12 +227,8 @@ usort($releases, function ($a, $b) {
                             <div>
                                 <label style="font-size: 0.75rem; color: #666;">Artist</label>
                                 <select onchange="updateArtist(${tIndex}, ${aIndex}, 'id', this.value)" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                                    ${generateArtistOptions()}
+                                    ${generateArtistOptions(artist.id)}
                                 </select>
-                                <script>
-                                    // Hack to set value dynamically
-                                    document.currentScript.previousElementSibling.value = "${artist.id}";
-                                <\/script>
                             </div>
                             <div>
                                 <label style="font-size: 0.75rem; color: #666;">Roles (Hold Ctrl/Cmd)</label>
@@ -314,7 +311,6 @@ usort($releases, function ($a, $b) {
         }
     }
 
-    // Submit Logic
     document.getElementById('contractForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -330,6 +326,13 @@ usort($releases, function ($a, $b) {
                 alert("Each track must have at least one artist.");
                 isValid = false;
             }
+            // Check if any artist is unselected
+            t.artists.forEach(a => {
+                if (!a.id) {
+                    alert("Please ensure every selected artist dropdown has a valid artist picked.");
+                    isValid = false;
+                }
+            });
         });
         if(!isValid) return;
 
@@ -357,10 +360,10 @@ usort($releases, function ($a, $b) {
                 alert('Contracts Generated Successfully!');
                 window.location.reload();
             } else {
-                alert('Error: ' + result.message);
+                alert('Server Error: ' + result.message);
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            alert('A network or server error occurred: ' + error.message + '\nCheck console for details.');
             console.error(error);
         } finally {
             submitBtn.innerText = originalText;
