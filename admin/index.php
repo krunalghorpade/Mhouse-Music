@@ -98,6 +98,10 @@ $isLoggedIn = isset($_SESSION['user_id']);
                     class="nav-item <?php echo ($_GET['view'] ?? '') == 'releases' ? 'active' : ''; ?>">
                     <ion-icon name="musical-notes-outline"></ion-icon> Releases
                 </a>
+                <a href="?view=contracts"
+                    class="nav-item <?php echo ($_GET['view'] ?? '') == 'contracts' ? 'active' : ''; ?>">
+                    <ion-icon name="document-text-outline"></ion-icon> Contracts
+                </a>
                 <a href="?view=merch" class="nav-item <?php echo ($_GET['view'] ?? '') == 'merch' ? 'active' : ''; ?>">
                     <ion-icon name="shirt-outline"></ion-icon> Shop
                 </a>
@@ -248,6 +252,8 @@ $isLoggedIn = isset($_SESSION['user_id']);
                     include 'onboarding_view.php';
                 } elseif ($view === 'releases') {
                     include 'releases_view.php';
+                } elseif ($view === 'contracts') {
+                    include 'contracts_view.php';
                 } elseif ($view === 'merch') {
                     include 'merch_view.php';
                 } elseif ($view === 'demos') {

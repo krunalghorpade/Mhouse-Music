@@ -17,8 +17,47 @@ if (isset($_POST['update_rating'])) {
 if (isset($_POST['update_status'])) {
     $id = $_POST['id'];
     $status = $_POST['status'];
+    
+    // Fetch demo details before update to check old status
+    $stmt_old = $pdo->prepare("SELECT * FROM demos WHERE id = ?");
+    $stmt_old->execute([$id]);
+    $demo = $stmt_old->fetch();
+
     $stmt = $pdo->prepare("UPDATE demos SET status = ? WHERE id = ?");
     $stmt->execute([$status, $id]);
+
+    // Check if status changed to rejected
+    if ($status === 'rejected' && $demo && $demo['status'] !== 'rejected') {
+        require_once '../backend/mailer.php';
+        
+        $artistName = htmlspecialchars($demo['artist_name']);
+        $trackName = htmlspecialchars($demo['track_name']);
+        $to = $demo['email'];
+        
+        $variations = [
+            "<p>Hi $artistName,</p><p>Thank you so much for sending us '<b>$trackName</b>'. We really appreciate you sharing your music with M-House Music. Unfortunately, this particular track isn't quite the right fit for our current release schedule.</p><p>Please don't let this discourage you—your sound has potential, and we'd love to hear more from you in the future. Keep creating and refining your art!</p><p>Best wishes,<br>The M-House Music Team</p>",
+            
+            "<p>Dear $artistName,</p><p>We want to sincerely thank you for submitting '<b>$trackName</b>' to M-House Music. After careful listening, we've decided to pass on this track for now.</p><p>The standard of submissions we receive is very high, and making these decisions is never easy. You clearly have talent, and we encourage you to keep pushing your creative boundaries. We look forward to hearing your future demos.</p><p>Warmly,<br>M-House Music A&R</p>",
+            
+            "<p>Hello $artistName,</p><p>Thanks for giving us the opportunity to listen to '<b>$trackName</b>'. While we won't be moving forward with this release, we want to acknowledge the hard work and passion you put into it.</p><p>The music industry is a continuous journey of growth, and we hope you keep honing your skills. Please feel free to send us your next tracks—we're always eager to hear how you evolve.</p><p>Best regards,<br>The M-House Music Team</p>",
+            
+            "<p>Hi $artistName,</p><p>First off, thank you for sharing your work, '<b>$trackName</b>', with us. We've given it a thorough listen, and while it's not exactly what we're looking for right now, we recognize your unique talent.</p><p>Every track is a stepping stone to greatness, so keep producing and staying authentic to your sound. We are cheering you on and would be happy to check out your future creations.</p><p>Keep it up,<br>M-House Music Team</p>",
+            
+            "<p>Dear $artistName,</p><p>We truly appreciate you sending '<b>$trackName</b>' our way. It’s always exciting to hear new music.</p><p>At this time, it doesn't align with our immediate label needs, so we have to pass. However, we want to remind you that every \"no\" is just one step closer to a \"yes\". Keep working hard, stay inspired, and continue to grow as an artist. We'd love to hear what you come up with next.</p><p>Best,<br>M-House Music</p>"
+        ];
+        
+        $message = $variations[array_rand($variations)];
+        $subject = "Regarding your demo submission: $trackName";
+        
+        // Pass a noreply email address as the custom sender and add CC emails
+        $ccList = ['contact@mhousemusic.com', 'contact@kratex.in'];
+        sendEmail($to, $subject, $message, 'noreply@mhousemusic.com', $ccList);
+        
+        $_SESSION['flash_msg'] = "Status updated and rejection email sent to the artist.";
+    } else {
+        $_SESSION['flash_msg'] = "Status updated successfully.";
+    }
+
     $filter_q = http_build_query($_GET);
     echo "<script>window.location.href='?view=demos&" . $filter_q . "';</script>";
     exit;

@@ -26,6 +26,10 @@ try {
         "CREATE TABLE IF NOT EXISTS artists (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
+            legal_name VARCHAR(255),
+            address TEXT,
+            pan_number VARCHAR(50),
+            govt_id_number VARCHAR(100),
             bio TEXT,
             image_url VARCHAR(255),
             social_links TEXT, -- JSON string

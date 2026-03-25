@@ -10,7 +10,7 @@ require_once __DIR__ . '/PHPMailer/Exception.php';
 require_once __DIR__ . '/PHPMailer/PHPMailer.php';
 require_once __DIR__ . '/PHPMailer/SMTP.php';
 
-function sendEmail($to, $subject, $message)
+function sendEmail($to, $subject, $message, $fromEmail = null, $cc = [])
 {
     // 1. Load Local Config for SMTP Credentials
     $smtp_host = null;
@@ -44,12 +44,23 @@ function sendEmail($to, $subject, $message)
         }
 
         // 3. Sender & Recipient
-        // Use a generic sender that likely works, or the one from config
-        $senderEmail = !empty($smtp_user) ? $smtp_user : 'noreply@mhousemusic.com';
+        // Use custom $fromEmail if provided, otherwise fallback to SMTP user or a generic 'noreply'
+        if (!empty($fromEmail)) {
+            $senderEmail = $fromEmail;
+        } else {
+            $senderEmail = !empty($smtp_user) ? $smtp_user : 'noreply@mhousemusic.com';
+        }
 
         $mail->setFrom($senderEmail, 'M-House Music');
         $mail->addAddress($to);
-        $mail->addReplyTo('contact@mhousemusic.com', 'M-House Music');
+        $mail->addReplyTo('noreply@mhousemusic.com', 'M-House Music');
+
+        // Add CCs if provided
+        if (!empty($cc) && is_array($cc)) {
+            foreach ($cc as $ccEmail) {
+                $mail->addCC($ccEmail);
+            }
+        }
 
         // 4. Content
         $mail->isHTML(true);

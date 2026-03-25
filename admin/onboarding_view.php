@@ -20,9 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Use Stage Name if provided, else Full Name
             $artistName = !empty($submission['stage_name']) ? $submission['stage_name'] : $submission['full_name'];
 
-            $stmtInsert = $pdo->prepare("INSERT INTO artists (name, bio, image_url, social_links) VALUES (?, ?, ?, ?)");
+            $stmtInsert = $pdo->prepare("INSERT INTO artists (name, legal_name, address, pan_number, govt_id_number, bio, image_url, social_links) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmtInsert->execute([
                 $artistName,
+                $submission['full_name'], // legal_name
+                $submission['address'],
+                $submission['pan_number'],
+                $submission['govt_id_number'],
                 $submission['bio'],
                 $submission['image_url'], // Use the uploaded profile image
                 $submission['social_links']
