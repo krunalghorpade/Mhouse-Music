@@ -683,7 +683,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button type="submit" class="ios-btn" style="width: 100%;">Preview Submission</button>
                     <p
                         style="text-align: center; color: #999; font-size: 0.8rem; margin-top: 1.5rem; text-transform: uppercase; letter-spacing: 1px;">
-                        By submitting, you agree to our Artist Terms & Conditions.</p>
+                        This form is only for mhouse website data collection, dont worry your data wont be shared with
+                        anyone, thats our guarantee</p>
                 </div>
             </form>
 
